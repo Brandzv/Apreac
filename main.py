@@ -1,4 +1,4 @@
-"""Module providing a function printing python version."""
+"""Código principal donde se ejecuta todo"""
 
 from logic.main_design import MainDesign
 
