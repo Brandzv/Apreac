@@ -41,7 +41,7 @@ class MainDesign(tk.Tk):
     def leftbar_menu(self):
         """Función de configuración gráfica de la barra lateral"""
 
-        ancho_menu = 20
+        ancho_menu = 17
         alto_menu = 2
         font_awesome = font.Font(family='FontAwesome', size=15)
 
