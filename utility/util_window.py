@@ -1,8 +1,8 @@
-"""Module providing a function printing python version."""
+"""Modulo de centrado de ventana"""
 
 
 def centrar_ventana(ventana, ventana_ancho, ventana_alto):
-    """Function printing python version."""
+    """Función de calculo para centrar la ventana"""
 
     pantalla_ancho = ventana.winfo_screenwidth()
     pantalla_alto = ventana.winfo_screenheight()
