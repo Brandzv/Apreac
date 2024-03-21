@@ -4,6 +4,9 @@ import tkinter as tk
 from tkinter import font
 from config import LEFTBAR_COLOR, BODY_COLOR, TEXT_COLOR, HOVER_COLOR, HOVER_TEXT_COLOR
 from utility import util_window as centrar_ventana
+from logic.escaneo_design import ScanDesign
+from logic.ctc_design import CtcDesign
+from logic.reporte_design import ReportDesign
 
 
 class MainDesign(tk.Tk):
@@ -50,20 +53,20 @@ class MainDesign(tk.Tk):
         self.button_reporte = tk.Button(self.leftbar)
 
         button_content = {
-            ("Escaneo", "   \uf02a", self.button_escaneo),
-            ("Activos", "   \uf390", self.button_asientos_activos),
-            ("Reporte", "   \uf15c", self.button_reporte)
+            ("Escaneo", "   \uf02a", self.button_escaneo, self.open_scan_panel),
+            ("Ctc", "   \uf390", self.button_asientos_activos, self.open_ctc_panel),
+            ("Reporte", "   \uf15c", self.button_reporte, self.open_report_panel)
         }
 
-        for text, icon, button in button_content:
+        for text, icon, button, comando in button_content:
             self.menu_button_config(
-                button, text, icon, font_awesome, ancho_menu, alto_menu)
+                button, text, icon, font_awesome, ancho_menu, alto_menu, comando)
 
-    def menu_button_config(self, button, text, icon, font_awesome, ancho_menu, alto_menu):
+    def menu_button_config(self, button, text, icon, font_awesome, ancho_menu, alto_menu, comando):
         """Función de configuración de los botones en la barra lateral"""
 
         button.config(text=f"{icon} {text}", anchor="w", font=font_awesome, bd=0, bg=LEFTBAR_COLOR,
-                      fg=TEXT_COLOR, width=ancho_menu, height=alto_menu)
+                      fg=TEXT_COLOR, width=ancho_menu, height=alto_menu, command=comando)
         button.pack(side=tk.TOP)
         self.bind_hover_events(button)
 
@@ -82,3 +85,19 @@ class MainDesign(tk.Tk):
         """Función que regresa el botón al estado original"""
 
         button.config(bg=LEFTBAR_COLOR, fg=TEXT_COLOR)
+
+    def open_scan_panel(self):
+        self.clear_panel(self.body)
+        ScanDesign(self.body)
+
+    def open_ctc_panel(self):
+        self.clear_panel(self.body)
+        CtcDesign(self.body)
+
+    def open_report_panel(self):
+        self.clear_panel(self.body)
+        ReportDesign(self.body)
+
+    def clear_panel(self, panel):
+        for widget in panel.winfo_children():
+            widget.destroy()
