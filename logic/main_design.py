@@ -87,17 +87,24 @@ class MainDesign(tk.Tk):
         button.config(bg=LEFTBAR_COLOR, fg=TEXT_COLOR)
 
     def open_scan_panel(self):
+        """Función que abre panel de escaneo y limpia el resto de paneles y contenidos de la ventana principal."""
+
         self.clear_panel(self.body)
         ScanDesign(self.body)
 
     def open_ctc_panel(self):
+        """Función que abre panel de ctc y limpia el resto de paneles y contenidos de la ventana principal."""
         self.clear_panel(self.body)
         CtcDesign(self.body)
 
     def open_report_panel(self):
+        """Función que abre panel de reporte y limpia el resto de paneles y contenidos de la ventana principal."""
+
         self.clear_panel(self.body)
         ReportDesign(self.body)
 
     def clear_panel(self, panel):
+        """Función que se encarga de limpiar el contenido del panel"""
+
         for widget in panel.winfo_children():
             widget.destroy()
