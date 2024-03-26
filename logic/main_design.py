@@ -4,9 +4,9 @@ import tkinter as tk
 from tkinter import font
 from config import LEFTBAR_COLOR, BODY_COLOR, TEXT_COLOR, HOVER_COLOR, HOVER_TEXT_COLOR
 from utility import util_window as centrar_ventana
-from logic.escaneo_design import ScanDesign
+from logic.registro_design import RegisterDesign
 from logic.ctc_design import CtcDesign
-from logic.reporte_design import ReportDesign
+from logic.horario_design import ScheduleDesign
 
 
 class MainDesign(tk.Tk):
@@ -48,14 +48,14 @@ class MainDesign(tk.Tk):
         alto_menu = 2
         font_awesome = font.Font(family='FontAwesome', size=15)
 
-        self.button_escaneo = tk.Button(self.leftbar)
-        self.button_asientos_activos = tk.Button(self.leftbar)
-        self.button_reporte = tk.Button(self.leftbar)
+        self.button_registro = tk.Button(self.leftbar)
+        self.button_ctc = tk.Button(self.leftbar)
+        self.button_horario = tk.Button(self.leftbar)
 
         button_content = {
-            ("Escaneo", "   \uf02a", self.button_escaneo, self.open_scan_panel),
-            ("Ctc", "   \uf390", self.button_asientos_activos, self.open_ctc_panel),
-            ("Reporte", "   \uf15c", self.button_reporte, self.open_report_panel)
+            ("Registro", "   \uf02a", self.button_registro, self.open_register_panel),
+            ("CTC", "   \uf390", self.button_ctc, self.open_ctc_panel),
+            ("Horario", "   \uf15c", self.button_horario, self.open_schedule_panel)
         }
 
         for text, icon, button, comando in button_content:
@@ -86,22 +86,22 @@ class MainDesign(tk.Tk):
 
         button.config(bg=LEFTBAR_COLOR, fg=TEXT_COLOR)
 
-    def open_scan_panel(self):
-        """Función que abre panel de escaneo y limpia el resto de paneles y contenidos de la ventana principal."""
+    def open_register_panel(self):
+        """Función que abre panel de registro y limpia los paneles y contenidos de la ventana."""
 
         self.clear_panel(self.body)
-        ScanDesign(self.body)
+        RegisterDesign(self.body)
 
     def open_ctc_panel(self):
-        """Función que abre panel de ctc y limpia el resto de paneles y contenidos de la ventana principal."""
+        """Función que abre panel de ctc y limpia los paneles y contenidos de la ventana."""
         self.clear_panel(self.body)
         CtcDesign(self.body)
 
-    def open_report_panel(self):
-        """Función que abre panel de reporte y limpia el resto de paneles y contenidos de la ventana principal."""
+    def open_schedule_panel(self):
+        """Función que abre panel de horario y limpia los paneles y contenidos de la ventana."""
 
         self.clear_panel(self.body)
-        ReportDesign(self.body)
+        ScheduleDesign(self.body)
 
     def clear_panel(self, panel):
         """Función que se encarga de limpiar el contenido del panel"""
