@@ -13,15 +13,15 @@ class RegisterDesign:
         frame.config(bd=2)
         frame.pack(fill="x", padx=100, pady=2, ipady=5)
 
-        self.entry_id(frame)
+        self.register_id(frame)
 
-    def entry_id(self, frame):
+    def register_id(self, frame):
         """Función que crea el entry de ID"""
 
         self.label_id = Label(frame, text="Ingrese o escaneé ID: ", font=(
             "Helvetica", 13))
 
-        self.id = ttk.Entry(frame, width=18,  font=("Helvetica", 13))
+        self.entry_id = ttk.Entry(frame, width=18,  font=("Helvetica", 13))
 
         self.button_id = tk.Button(
             frame, text="Registrar", font=("Helvetica", 9))
@@ -29,8 +29,8 @@ class RegisterDesign:
         # Calcula el ancho total del labelFrame
         frame_width = frame.winfo_width()
 
-        # Calcula el ancho total de los widgets (label_id, id, button_id)
-        widgets_width = self.label_id.winfo_width() + self.id.winfo_width() + \
+        # Calcula el ancho total de los widgets (label_id, entry_id, button_id)
+        widgets_width = self.label_id.winfo_width() + self.entry_id.winfo_width() + \
             self.button_id.winfo_width()
 
         # Calcula el padding izquierdo necesario para centrar los widgets
@@ -38,5 +38,6 @@ class RegisterDesign:
 
         # Establece el padding para los widgets
         self.label_id.pack(padx=left_padding)
-        self.id.pack(padx=left_padding)
+        self.entry_id.pack(padx=left_padding)
+        self.entry_id.focus_set()
         self.button_id.pack(padx=left_padding, pady=5)
