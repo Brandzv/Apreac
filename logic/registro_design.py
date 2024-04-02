@@ -1,7 +1,8 @@
 """Modulo de diseño del panel registro"""
 
 import tkinter as tk
-from tkinter import ttk, Label
+from tkinter import ttk
+from logic.registro_info_design import InfoDesign
 
 
 class RegisterDesign:
@@ -18,15 +19,29 @@ class RegisterDesign:
     def register_id(self, frame):
         """Función que crea el entry de ID"""
 
-        self.label_id = Label(frame, text="Ingrese o escaneé ID: ", font=(
-            "Helvetica", 13))
+        self.label_id = tk.Label(
+            frame, text="Ingrese o escaneé ID:", font=("Helvetica", 13))
 
-        self.entry_id = ttk.Entry(frame, width=18,  font=("Helvetica", 13))
+        self.entry_id = ttk.Entry(frame, width=18, font=("Helvetica", 13))
+
+        # Función para verificar si el entry contiene números válidos
+        def validar_entry(texto_entry):
+            try:
+                float(texto_entry)
+                return True
+            except ValueError:
+                return False
+
+        def clic_button():
+            texto_entry = self.entry_id.get()  # Obtiene el texto del Entry
+            if validar_entry(texto_entry):
+                self.open_info_frame(frame)
+            else:
+                print("Por favor, ingresa números válidos en el Entry.")
 
         self.button_id = tk.Button(
-            frame, text="Registrar", font=("Helvetica", 9))
+            frame, text="Registrar", command=clic_button, width=10, height=1, font=("Helvetica", 9))
 
-        # Calcula el ancho total del labelFrame
         frame_width = frame.winfo_width()
 
         # Calcula el ancho total de los widgets (label_id, entry_id, button_id)
@@ -36,8 +51,17 @@ class RegisterDesign:
         # Calcula el padding izquierdo necesario para centrar los widgets
         left_padding = max((frame_width - widgets_width) // 2, 0)
 
-        # Establece el padding para los widgets
         self.label_id.pack(padx=left_padding)
         self.entry_id.pack(padx=left_padding)
         self.entry_id.focus_set()
         self.button_id.pack(padx=left_padding, pady=5)
+
+    def open_info_frame(self, frame):
+        """Función que abre frame de información y cierra el panel de registro."""
+        self.clear_panel(frame)
+        InfoDesign(frame)
+
+    def clear_panel(self, panel):
+        """Función que se encarga de limpiar el contenido del frame"""
+        for widget in panel.winfo_children():
+            widget.destroy()
