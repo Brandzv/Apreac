@@ -25,17 +25,17 @@ class RegisterDesign:
         self.entry_id = ttk.Entry(frame, width=18, font=("Helvetica", 13))
 
         # Función para verificar si el entry contiene números válidos
-        def validar_entry(texto_entry):
+        def validar_entry(search_id):
             try:
-                float(texto_entry)
+                float(search_id)
                 return True
             except ValueError:
                 return False
 
         def clic_button():
-            texto_entry = self.entry_id.get()  # Obtiene el texto del Entry
-            if validar_entry(texto_entry):
-                self.open_info_frame(frame)
+            search_id = self.entry_id.get()  # Obtiene el id del Entry
+            if validar_entry(search_id):
+                self.open_info_frame(frame, search_id)
             else:
                 print("Por favor, ingresa números válidos en el Entry.")
 
@@ -56,10 +56,10 @@ class RegisterDesign:
         self.entry_id.focus_set()
         self.button_id.pack(padx=left_padding, pady=5)
 
-    def open_info_frame(self, frame):
+    def open_info_frame(self, frame, search_id):
         """Función que abre frame de información y cierra el panel de registro."""
         self.clear_panel(frame)
-        InfoDesign(frame)
+        InfoDesign(frame, search_id)
 
     def clear_panel(self, panel):
         """Función que se encarga de limpiar el contenido del frame"""
