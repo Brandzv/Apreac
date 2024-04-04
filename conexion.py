@@ -3,9 +3,7 @@ import sqlite3
 
 try:
     conecta = sqlite3.connect("database/apreac.db")
-    print("Opened database successfully")
-
-    conecta.close()
+    cursor = conecta.cursor()
 
 except ImportError as ie:
     print(ie)
