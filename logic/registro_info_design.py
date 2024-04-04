@@ -15,9 +15,8 @@ class InfoDesign():
             f"SELECT id, nombres, apellidoPaterno, apellidoMaterno, programa, rol FROM alumnos WHERE ID = {search_id}")
         alumno = cursor.fetchone()
 
-        self.id_alumno, self.nombre, self.apellido_paterno, self.apellido_materno, self.programa, self.rol = alumno
-
         if alumno:
+            self.id_alumno, self.nombre, self.apellido_paterno, self.apellido_materno, self.programa, self.rol = alumno
             self.info_alumno(frame)
 
         else:
