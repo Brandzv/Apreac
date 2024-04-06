@@ -41,7 +41,7 @@ class RegisterDesign:
                 print("Por favor, ingresa números válidos en el Entry.")
 
         self.button_id = tk.Button(
-            frame, text="Registrar", command=clic_button, width=10, height=1, font=("Helvetica", 9))
+            frame, text="Buscar", command=clic_button, width=10, height=1, font=("Helvetica", 9))
 
         frame_width = frame.winfo_width()
 
