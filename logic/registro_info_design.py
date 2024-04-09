@@ -14,6 +14,7 @@ class InfoDesign():
         cursor.execute(
             f"SELECT id, nombres, apellidoPaterno, apellidoMaterno, programa, rol FROM alumnos WHERE ID = {search_id}")
         alumno = cursor.fetchone()
+        cursor.close()
 
         if alumno:
             self.id_alumno, self.nombre, self.apellido_paterno, self.apellido_materno, self.programa, self.rol = alumno
@@ -66,6 +67,10 @@ class InfoDesign():
         self.show_rol = ttk.Entry(frame, font=("Helvetica", 13))
         self.show_rol.insert(0, self.rol)
 
+        # Botón para registrar alumno
+        self.button_register_student = tk.Button(
+            frame, text="Registrar", command=self.save_register, width=15, height=1, font=("Helvetica", 11))
+
         # Posicionar información en pantalla
         self.text_id.grid(row=1, column=0, pady=5, padx=5, sticky="w")
         self.show_id.grid(row=1, column=1, pady=5, padx=5, sticky="ew")
@@ -94,25 +99,29 @@ class InfoDesign():
         self.text_rol.grid(row=3, column=2, pady=5, padx=5, sticky="w")
         self.show_rol.grid(row=3, column=3, pady=5, padx=5, sticky="ew")
         frame.columnconfigure(3, weight=1)
+        #
+        self.button_register_student.grid(
+            row=4, columnspan=4)
 
     def table_info(self, body_table):
         """Función tabla de registro bitácora"""
         self.tree = ttk.Treeview(body_table, columns=(
-            "no", "pc", "fecha", "nombre", "rol", "programa", "hr_entrada", "hr_salida", "actividad"), show="headings")
-        self.tree.heading("no", text="No.")
-        self.tree.heading("pc", text="PC")
-        self.tree.heading("fecha", text="Fecha")
-        self.tree.heading("nombre", text="Nombre")
-        self.tree.heading("rol", text="Rol")
-        self.tree.heading("programa", text="Programa")
-        self.tree.heading("hr_entrada", text="Hora Entrada")
-        self.tree.heading("hr_salida", text="Hora Salida")
-        self.tree.heading("actividad", text="Actividad")
+            "numero_registro", "numero_pc", "fecha", "nombre_alumno", "rol", "programa", "hr_entrada", "hr_salida", "actividad"), show="headings")
 
-        self.tree.column("no", anchor="w")
-        self.tree.column("pc", anchor="w")
+        self.tree.heading("numero_registro", text="No.", anchor="center")
+        self.tree.heading("numero_pc", text="PC", anchor="center")
+        self.tree.heading("fecha", text="Fecha", anchor="center")
+        self.tree.heading("nombre_alumno", text="Nombre", anchor="center")
+        self.tree.heading("rol", text="Rol", anchor="center")
+        self.tree.heading("programa", text="Programa", anchor="center")
+        self.tree.heading("hr_entrada", text="Hora entrada", anchor="center")
+        self.tree.heading("hr_salida", text="Hora salida", anchor="center")
+        self.tree.heading("actividad", text="Actividad", anchor="center")
+
+        self.tree.column("numero_registro", anchor="w")
+        self.tree.column("numero_pc", anchor="w")
         self.tree.column("fecha", anchor="w")
-        self.tree.column("nombre", anchor="w")
+        self.tree.column("nombre_alumno", anchor="w")
         self.tree.column("rol", anchor="w")
         self.tree.column("programa", anchor="w")
         self.tree.column("hr_entrada", anchor="w")
@@ -122,3 +131,9 @@ class InfoDesign():
         for column in self.tree['columns']:
             self.tree.column(column, width=50,  anchor="center")
         self.tree.pack(fill="both", expand=True, pady=1, padx=5)
+
+    def save_register(self):
+        """Función guardar registro"""
+
+    def show_registers(self):
+        """Función mostrar registros"""
