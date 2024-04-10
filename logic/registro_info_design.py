@@ -1,7 +1,7 @@
 """Modulo de diseño del panel registro de información"""
 import tkinter as tk
 from tkinter import ttk
-from conexion import cursor
+from conexion import cursor, conecta
 
 
 class InfoDesign():
@@ -14,7 +14,8 @@ class InfoDesign():
         cursor.execute(
             f"SELECT id, nombres, apellidoPaterno, apellidoMaterno, programa, rol FROM alumnos WHERE ID = {search_id}")
         alumno = cursor.fetchone()
-        cursor.close()
+
+        conecta.commit()
 
         if alumno:
             self.id_alumno, self.nombre, self.apellido_paterno, self.apellido_materno, self.programa, self.rol = alumno
@@ -118,22 +119,27 @@ class InfoDesign():
         self.tree.heading("hr_salida", text="Hora salida", anchor="center")
         self.tree.heading("actividad", text="Actividad", anchor="center")
 
-        self.tree.column("numero_registro", anchor="w")
-        self.tree.column("numero_pc", anchor="w")
-        self.tree.column("fecha", anchor="w")
-        self.tree.column("nombre_alumno", anchor="w")
-        self.tree.column("rol", anchor="w")
-        self.tree.column("programa", anchor="w")
-        self.tree.column("hr_entrada", anchor="w")
-        self.tree.column("hr_salida", anchor="w")
-        self.tree.column("actividad", anchor="w")
-
         for column in self.tree['columns']:
             self.tree.column(column, width=50,  anchor="center")
         self.tree.pack(fill="both", expand=True, pady=1, padx=5)
 
     def save_register(self):
         """Función guardar registro"""
+        # obtiene datos a guardar
+        save_nombre = self.show_nombre.get()
+        save_apellido_paterno = self.show_apellido_paterno.get()
+        save_apellido_amaterno = self.show_apellido_materno.get()
+
+        nombre_completo = f"{save_nombre} {save_apellido_paterno} {save_apellido_amaterno}"
+
+        programa = self.show_programa.get()
+
+        rol = self.show_rol.get()
+
+        cursor.execute(
+            "INSERT INTO bitacoraUso (nombreAlumno, rol, programa) VALUES (?, ?, ?)", (nombre_completo, rol, programa))
+
+        conecta.commit()
 
     def show_registers(self):
         """Función mostrar registros"""
