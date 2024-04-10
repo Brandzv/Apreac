@@ -30,12 +30,6 @@ class InfoDesign():
     def student_info(self, frame):
         """Función mostrar información de alumno"""
 
-        # Mostrar ID de alumno
-        self.text_id = tk.Label(
-            frame, text="ID:", font=("Helvetica", 13))
-        self.show_id = ttk.Entry(frame, font=("Helvetica", 13))
-        self.show_id.insert(0, self.id_alumno)
-
         # Mostrar nombre de alumno
         self.text_nombre = tk.Label(frame, text="Nombre:",
                                     font=("Helvetica", 13))
@@ -68,37 +62,40 @@ class InfoDesign():
         self.show_rol = ttk.Entry(frame, font=("Helvetica", 13))
         self.show_rol.insert(0, self.rol)
 
+        # Botón seleccionar actividad y pc
+        self.button_select = tk.Button(
+            frame, text="Selección", width=15, height=1, font=("Helvetica", 11))
+
         # Botón para registrar alumno
         self.button_register_student = tk.Button(
             frame, text="Registrar", command=self.save_register, width=15, height=1, font=("Helvetica", 11))
 
         # Posicionar información en pantalla
-        self.text_id.grid(row=1, column=0, pady=5, padx=5, sticky="w")
-        self.show_id.grid(row=1, column=1, pady=5, padx=5, sticky="ew")
+        self.text_nombre.grid(row=1, column=0, pady=5, padx=5, sticky="w")
+        self.show_nombre.grid(row=1, column=1, pady=5, padx=5, sticky="ew")
         frame.columnconfigure(1, weight=1)
         #
-        self.text_nombre.grid(row=1, column=2, pady=5, padx=5, sticky="w")
-        self.show_nombre.grid(row=1, column=3, pady=5, padx=5, sticky="ew")
+        self.text_apellido_paterno.grid(
+            row=1, column=2, pady=5, padx=5, sticky="w")
+        self.show_apellido_paterno.grid(
+            row=1, column=3, pady=5, padx=5, sticky="ew")
         frame.columnconfigure(3, weight=1)
         #
-        self.text_apellido_paterno.grid(
+        self.text_apellido_materno.grid(
             row=2, column=0, pady=5, padx=5, sticky="w")
-        self.show_apellido_paterno.grid(
+        self.show_apellido_materno.grid(
             row=2, column=1, pady=5, padx=5, sticky="ew")
         frame.columnconfigure(1, weight=1)
         #
-        self.text_apellido_materno.grid(
-            row=2, column=2, pady=5, padx=5, sticky="w")
-        self.show_apellido_materno.grid(
-            row=2, column=3, pady=5, padx=5, sticky="ew")
+        self.text_programa.grid(row=2, column=2, pady=5, padx=5, sticky="w")
+        self.show_programa.grid(row=2, column=3, pady=5, padx=5, sticky="ew")
         frame.columnconfigure(3, weight=1)
         #
-        self.text_programa.grid(row=3, column=0, pady=5, padx=5, sticky="w")
-        self.show_programa.grid(row=3, column=1, pady=5, padx=5, sticky="ew")
+        self.text_rol.grid(row=3, column=0, pady=5, padx=5, sticky="w")
+        self.show_rol.grid(row=3, column=1, pady=5, padx=5, sticky="ew")
         frame.columnconfigure(1, weight=1)
         #
-        self.text_rol.grid(row=3, column=2, pady=5, padx=5, sticky="w")
-        self.show_rol.grid(row=3, column=3, pady=5, padx=5, sticky="ew")
+        self.button_select.grid(row=3, column=2, columnspan=2)
         frame.columnconfigure(3, weight=1)
         #
         self.button_register_student.grid(
