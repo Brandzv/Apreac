@@ -2,7 +2,7 @@
 import sqlite3
 
 try:
-    conecta = sqlite3.connect("database/APREAC.db")
+    conecta = sqlite3.connect("database/apreac.db")
     cursor = conecta.cursor()
 
 except ImportError as ie:
