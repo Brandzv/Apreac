@@ -9,9 +9,10 @@ class InfoDesign():
     """Clase del diseño del panel de registro de información"""
 
     def __init__(self, frame, search_id, body_table):
-        self.body_table = body_table
         # Cambio de tamaño del frame
         frame.pack(fill="x", padx=70, pady=2, ipady=5)
+
+        self.refresh = body_table
 
         cursor.execute(
             f"SELECT id, nombres, apellidoPaterno, apellidoMaterno, programa, rol FROM alumnos WHERE ID = {search_id}")
@@ -24,7 +25,6 @@ class InfoDesign():
             self.student_info(frame)
             self.table_info(body_table)
             self.show_registers(body_table)
-
         else:
             self.lbl = tk.Label(
                 frame, text="Estudiante no encontrado", font=("Helvetica", 13))
@@ -33,33 +33,29 @@ class InfoDesign():
     def student_info(self, frame):
         """Función mostrar información de alumno"""
 
-        # Mostrar nombre de alumno
+        # Mostrar información de alumno
         self.text_nombre = tk.Label(frame, text="Nombre:",
                                     font=("Helvetica", 13))
         self.show_nombre = ttk.Entry(frame, font=("Helvetica", 13))
         self.show_nombre.insert(0, self.nombre)
-
-        # Mostrar apellido paterno
+        #
         self.text_apellido_paterno = tk.Label(frame, text="Apellido Paterno:",
                                               font=("Helvetica", 13))
         self.show_apellido_paterno = ttk.Entry(
             frame, font=("Helvetica", 13))
         self.show_apellido_paterno.insert(0, self.apellido_paterno)
-
-        # Mostrar apellido materno
+        #
         self.text_apellido_materno = tk.Label(frame, text="Apellido Materno:",
                                               font=("Helvetica", 13))
         self.show_apellido_materno = ttk.Entry(
             frame, font=("Helvetica", 13))
         self.show_apellido_materno.insert(0, self.apellido_materno)
-
-        # Mostrar programa
+        #
         self.text_programa = tk.Label(frame, text="Programa:",
                                       font=("Helvetica", 13))
         self.show_programa = ttk.Entry(frame, font=("Helvetica", 13))
         self.show_programa.insert(0, self.programa)
-
-        # Mostrar rol
+        #
         self.text_rol = tk.Label(
             frame, text="Rol:", font=("Helvetica", 13))
         self.show_rol = ttk.Entry(frame, font=("Helvetica", 13))
@@ -68,7 +64,6 @@ class InfoDesign():
         # Botón seleccionar actividad y pc
         self.button_select = tk.Button(
             frame, text="Selección", width=15, height=1, font=("Helvetica", 11))
-
         # Botón para registrar alumno
         self.button_register_student = tk.Button(
             frame, text="Registrar", command=self.save_register, width=15, height=1, font=("Helvetica", 11))
@@ -106,6 +101,7 @@ class InfoDesign():
 
     def table_info(self, body_table):
         """Función tabla de registro bitácora"""
+
         self.tree = ttk.Treeview(body_table, columns=(
             "numero_registro", "numero_pc", "fecha", "nombre_alumno", "rol", "programa", "hr_entrada", "hr_salida", "actividad"), show="headings")
 
@@ -133,18 +129,17 @@ class InfoDesign():
 
     def save_register(self):
         """Función guardar registro"""
-        # Obtener la fecha y hora actual
+
         time = datetime.datetime.now()
-        # Formatear la fecha como dd/mm/aa
+        #
         date = time.strftime("%d/%m/%y")
-        # Formatear la hora como HH:MM
+        #
         hour = time.strftime("%H:%M")
 
-        # obtiene datos a guardar
         save_nombre = self.show_nombre.get()
         save_apellido_paterno = self.show_apellido_paterno.get()
         save_apellido_amaterno = self.show_apellido_materno.get()
-
+        #
         nombre_completo = f"{save_nombre} {save_apellido_paterno} {save_apellido_amaterno}"
 
         programa = self.show_programa.get()
@@ -156,13 +151,16 @@ class InfoDesign():
 
         conecta.commit()
 
-        self.show_registers(self.body_table)
+        self.show_registers(self.refresh)
 
     def show_registers(self, body_table):
         """Función mostrar registros"""
+
         self.tree.delete(*self.tree.get_children()
                          )  # Limpiar registros existentes
+
         cursor.execute(
             "SELECT no, pc, fecha, nombreAlumno, rol, programa, horaEntrada, horaSalida, actividad FROM bitacoraUso")
+
         for row in cursor.fetchall():
             self.tree.insert("", "end", values=row)
