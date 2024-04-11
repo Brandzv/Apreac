@@ -13,6 +13,7 @@ class InfoDesign():
         frame.pack(fill="x", padx=70, pady=2, ipady=5)
 
         self.refresh = body_table
+        self.counter = 0
 
         cursor.execute(
             f"SELECT id, nombres, apellidoPaterno, apellidoMaterno, programa, rol FROM alumnos WHERE ID = {search_id}")
@@ -130,6 +131,10 @@ class InfoDesign():
     def save_register(self):
         """Función guardar registro"""
 
+        self.counter += 1
+        if self.counter > 20:
+            self.counter = 1
+
         time = datetime.datetime.now()
         #
         date = time.strftime("%d/%m/%y")
@@ -147,7 +152,7 @@ class InfoDesign():
         rol = self.show_rol.get()
 
         cursor.execute(
-            "INSERT INTO bitacoraUso (fecha, nombreAlumno, rol, programa, horaEntrada) VALUES (?, ?, ?, ?, ?)", (date, nombre_completo, rol, programa, hour))
+            "INSERT INTO bitacoraUso (no, fecha, nombreAlumno, rol, programa, horaEntrada) VALUES (?, ?, ?, ?, ?, ?)", (self.counter, date, nombre_completo, rol, programa, hour))
 
         conecta.commit()
 
