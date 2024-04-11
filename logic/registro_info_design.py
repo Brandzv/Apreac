@@ -1,5 +1,6 @@
 """Modulo de diseño del panel registro de información"""
 import tkinter as tk
+import datetime
 from tkinter import ttk
 from conexion import cursor, conecta
 
@@ -8,6 +9,7 @@ class InfoDesign():
     """Clase del diseño del panel de registro de información"""
 
     def __init__(self, frame, search_id, body_table):
+        self.body_table = body_table
         # Cambio de tamaño del frame
         frame.pack(fill="x", padx=70, pady=2, ipady=5)
 
@@ -21,6 +23,7 @@ class InfoDesign():
             self.id_alumno, self.nombre, self.apellido_paterno, self.apellido_materno, self.programa, self.rol = alumno
             self.student_info(frame)
             self.table_info(body_table)
+            self.show_registers(body_table)
 
         else:
             self.lbl = tk.Label(
@@ -106,22 +109,37 @@ class InfoDesign():
         self.tree = ttk.Treeview(body_table, columns=(
             "numero_registro", "numero_pc", "fecha", "nombre_alumno", "rol", "programa", "hr_entrada", "hr_salida", "actividad"), show="headings")
 
-        self.tree.heading("numero_registro", text="No.", anchor="center")
-        self.tree.heading("numero_pc", text="PC", anchor="center")
-        self.tree.heading("fecha", text="Fecha", anchor="center")
-        self.tree.heading("nombre_alumno", text="Nombre", anchor="center")
-        self.tree.heading("rol", text="Rol", anchor="center")
-        self.tree.heading("programa", text="Programa", anchor="center")
-        self.tree.heading("hr_entrada", text="Hora entrada", anchor="center")
-        self.tree.heading("hr_salida", text="Hora salida", anchor="center")
-        self.tree.heading("actividad", text="Actividad", anchor="center")
+        self.tree.heading("#1", text="No.", anchor="center")
+        self.tree.heading("#2", text="PC", anchor="center")
+        self.tree.heading("#3", text="Fecha", anchor="center")
+        self.tree.heading("#4", text="Nombre", anchor="center")
+        self.tree.heading("#5", text="Rol", anchor="center")
+        self.tree.heading("#6", text="Programa", anchor="center")
+        self.tree.heading("#7", text="Hora entrada", anchor="center")
+        self.tree.heading("#8", text="Hora salida", anchor="center")
+        self.tree.heading("#9", text="Actividad", anchor="center")
 
-        for column in self.tree['columns']:
-            self.tree.column(column, width=50,  anchor="center")
+        self.tree.column("#1", width=10, anchor="center")
+        self.tree.column("#2", width=10, anchor="center")
+        self.tree.column("#3", width=45, anchor="center")
+        self.tree.column("#4", width=50, anchor="center")
+        self.tree.column("#5", width=45, anchor="center")
+        self.tree.column("#6", width=50, anchor="center")
+        self.tree.column("#7", width=50, anchor="center")
+        self.tree.column("#8", width=50, anchor="center")
+        self.tree.column("#9", width=50, anchor="center")
+
         self.tree.pack(fill="both", expand=True, pady=1, padx=5)
 
     def save_register(self):
         """Función guardar registro"""
+        # Obtener la fecha y hora actual
+        time = datetime.datetime.now()
+        # Formatear la fecha como dd/mm/aa
+        date = time.strftime("%d/%m/%y")
+        # Formatear la hora como HH:MM
+        hour = time.strftime("%H:%M")
+
         # obtiene datos a guardar
         save_nombre = self.show_nombre.get()
         save_apellido_paterno = self.show_apellido_paterno.get()
@@ -134,9 +152,17 @@ class InfoDesign():
         rol = self.show_rol.get()
 
         cursor.execute(
-            "INSERT INTO bitacoraUso (nombreAlumno, rol, programa) VALUES (?, ?, ?)", (nombre_completo, rol, programa))
+            "INSERT INTO bitacoraUso (fecha, nombreAlumno, rol, programa, horaEntrada) VALUES (?, ?, ?, ?, ?)", (date, nombre_completo, rol, programa, hour))
 
         conecta.commit()
 
-    def show_registers(self):
+        self.show_registers(self.body_table)
+
+    def show_registers(self, body_table):
         """Función mostrar registros"""
+        self.tree.delete(*self.tree.get_children()
+                         )  # Limpiar registros existentes
+        cursor.execute(
+            "SELECT no, pc, fecha, nombreAlumno, rol, programa, horaEntrada, horaSalida, actividad FROM bitacoraUso")
+        for row in cursor.fetchall():
+            self.tree.insert("", "end", values=row)
