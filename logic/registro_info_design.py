@@ -62,9 +62,18 @@ class InfoDesign():
         self.show_rol = ttk.Entry(frame, font=("Helvetica", 13))
         self.show_rol.insert(0, self.rol)
 
-        # Botón seleccionar actividad y pc
-        self.button_select = tk.Button(
-            frame, text="Selección", width=15, height=1, font=("Helvetica", 11))
+        # Dropdown seleccionar actividades
+        options_activity = ["Clase", "Tarea"]
+        self.dropdown_activity = ttk.Combobox(
+            frame, values=options_activity, state="readonly")
+        self.dropdown_activity.set("Selección Actividad")
+        self.dropdown_activity.bind("<<ComboboxSelected>>")
+        # Dropdown seleccionar pc
+        options_pc = [str(i) for i in range(1, 31)]
+        self.dropdown_pc = ttk.Combobox(
+            frame, values=options_pc, state="readonly")
+        self.dropdown_pc.set("Selección PC")
+        self.dropdown_pc.bind("<<ComboboxSelected>>")
         # Botón para registrar alumno
         self.button_register_student = tk.Button(
             frame, text="Registrar", command=self.save_register, width=15, height=1, font=("Helvetica", 11))
@@ -94,8 +103,9 @@ class InfoDesign():
         self.show_rol.grid(row=3, column=1, pady=5, padx=5, sticky="ew")
         frame.columnconfigure(1, weight=1)
         #
-        self.button_select.grid(row=3, column=2, columnspan=2)
-        frame.columnconfigure(3, weight=1)
+        self.dropdown_activity.grid(row=3, column=2, pady=5, padx=5)
+        #
+        self.dropdown_pc.grid(row=3, column=3, pady=5, padx=5)
         #
         self.button_register_student.grid(
             row=4, columnspan=4)
