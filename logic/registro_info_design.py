@@ -13,7 +13,6 @@ class InfoDesign():
         frame.pack(fill="x", padx=70, pady=2, ipady=5)
 
         self.refresh = body_table
-        self.counter = 0
 
         cursor.execute(
             f"SELECT id, nombres, apellidoPaterno, apellidoMaterno, programa, rol FROM alumnos WHERE ID = {search_id}")
@@ -141,9 +140,17 @@ class InfoDesign():
     def save_register(self):
         """Función guardar registro"""
 
-        self.counter += 1
-        if self.counter > 20:
-            self.counter = 1
+        cursor.execute(
+            "SELECT no FROM bitacoraUso ORDER BY ROWID DESC LIMIT 1")
+        result = cursor.fetchone()
+        if result:
+            last_number = result[0]
+        else:
+            last_number = 0
+
+        counter = last_number + 1
+        if counter > 20:
+            counter = 1
 
         time = datetime.datetime.now()
         #
@@ -162,7 +169,7 @@ class InfoDesign():
         rol = self.show_rol.get()
 
         cursor.execute(
-            "INSERT INTO bitacoraUso (no, fecha, nombreAlumno, rol, programa, horaEntrada) VALUES (?, ?, ?, ?, ?, ?)", (self.counter, date, nombre_completo, rol, programa, hour))
+            "INSERT INTO bitacoraUso (no, fecha, nombreAlumno, rol, programa, horaEntrada) VALUES (?, ?, ?, ?, ?, ?)", (counter, date, nombre_completo, rol, programa, hour))
 
         conecta.commit()
 
