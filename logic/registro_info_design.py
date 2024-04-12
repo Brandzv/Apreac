@@ -176,6 +176,7 @@ class InfoDesign():
         # Campo "rol" en bd bitacoraUso
         rol = self.show_rol.get()
 
+        # Campo "actividad" en bd bitacoraUso
         actividad = self.dropdown_activity.get()
 
         cursor.execute(
@@ -188,11 +189,13 @@ class InfoDesign():
     def show_registers(self, body_table):
         """Función mostrar registros"""
 
-        self.tree.delete(*self.tree.get_children()
-                         )  # Limpiar registros existentes
+        self.tree.delete(*self.tree.get_children())
 
+        fecha_actual = datetime.datetime.now().strftime("%d/%m/%y")
+
+        # Seleccionar registros a mostrar y filtrar por fecha
         cursor.execute(
-            "SELECT no, pc, fecha, nombreAlumno, rol, programa, horaEntrada, horaSalida, actividad FROM bitacoraUso")
+            "SELECT no, pc, fecha, nombreAlumno, rol, programa, horaEntrada, horaSalida, actividad FROM bitacoraUso WHERE fecha = ?", (fecha_actual,))
 
         for row in cursor.fetchall():
             self.tree.insert("", "end", values=row)
