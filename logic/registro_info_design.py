@@ -65,14 +65,12 @@ class InfoDesign():
         options_activity = ["Clase", "Tarea"]
         self.dropdown_activity = ttk.Combobox(
             frame, values=options_activity, state="readonly")
-        self.dropdown_activity.set("Selección Actividad")
-        self.dropdown_activity.bind("<<ComboboxSelected>>")
+        self.dropdown_activity.current(0)
         # Dropdown seleccionar pc
         options_pc = [str(i) for i in range(1, 31)]
         self.dropdown_pc = ttk.Combobox(
             frame, values=options_pc, state="readonly")
         self.dropdown_pc.set("Selección PC")
-        self.dropdown_pc.bind("<<ComboboxSelected>>")
         # Botón para registrar alumno
         self.button_register_student = tk.Button(
             frame, text="Registrar", command=self.save_register, width=15, height=1, font=("Helvetica", 11))
@@ -140,36 +138,48 @@ class InfoDesign():
     def save_register(self):
         """Función guardar registro"""
 
+        # Campo "no" en bd bitacoraUso
         cursor.execute(
             "SELECT no FROM bitacoraUso ORDER BY ROWID DESC LIMIT 1")
         result = cursor.fetchone()
+        #
         if result:
             last_number = result[0]
         else:
             last_number = 0
-
+        #
         counter = last_number + 1
         if counter > 20:
             counter = 1
 
+        # Campo "pc" en bd bitacoraUso
+        pc_uso = self.dropdown_pc.get()
+
+        # Campo "fecha" en bd bitacoraUso
         time = datetime.datetime.now()
         #
         date = time.strftime("%d/%m/%y")
-        #
+
+        # Campo "hora" en bd bitacoraUso
         hour = time.strftime("%H:%M")
 
+        # Campo "nombreAlumno" en bd bitacoraUso
         save_nombre = self.show_nombre.get()
         save_apellido_paterno = self.show_apellido_paterno.get()
         save_apellido_amaterno = self.show_apellido_materno.get()
         #
         nombre_completo = f"{save_nombre} {save_apellido_paterno} {save_apellido_amaterno}"
 
+        # Campo "programa" en bd bitacoraUso
         programa = self.show_programa.get()
 
+        # Campo "rol" en bd bitacoraUso
         rol = self.show_rol.get()
 
+        actividad = self.dropdown_activity.get()
+
         cursor.execute(
-            "INSERT INTO bitacoraUso (no, fecha, nombreAlumno, rol, programa, horaEntrada) VALUES (?, ?, ?, ?, ?, ?)", (counter, date, nombre_completo, rol, programa, hour))
+            "INSERT INTO bitacoraUso (no, pc, fecha, nombreAlumno, rol, programa, horaEntrada, actividad) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (counter, pc_uso, date, nombre_completo, rol, programa, hour, actividad))
 
         conecta.commit()
 
