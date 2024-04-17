@@ -89,7 +89,7 @@ class Login(tk.Tk):
         valid_access = cursor.fetchone()
 
         if valid_access:
-            if user == "Admin":
+            if user == "admin" or user == "Admin":
                 self.destroy()
                 MainDesign()
             else:
