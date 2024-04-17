@@ -71,9 +71,16 @@ class InfoDesign():
         self.dropdown_pc = ttk.Combobox(
             frame, values=options_pc, state="readonly")
         self.dropdown_pc.set("Selección PC")
+
+        # Botón para volver a buscar id
+        self.button_recover_id = tk.Button(
+            frame, text="Atrás", command=self.recover_id, width=6, font=("Helvetica", 11))
         # Botón para registrar alumno
         self.button_register_student = tk.Button(
-            frame, text="Registrar", command=self.save_register, width=15, height=1, font=("Helvetica", 11))
+            frame, text="Registrar", command=self.save_register, width=15, font=("Helvetica", 11))
+        # Botón para generar PDF
+        self.button_generate_pdf = tk.Button(
+            frame, text="Generar PDF", command=self.generate_pdf, width=15, font=("Helvetica", 11))
 
         # Posicionar información en pantalla
         self.text_nombre.grid(row=1, column=0, pady=5, padx=5, sticky="w")
@@ -104,8 +111,12 @@ class InfoDesign():
         #
         self.dropdown_pc.grid(row=3, column=3, pady=5, padx=5)
         #
-        self.button_register_student.grid(
-            row=4, columnspan=4)
+        self.button_recover_id.grid(
+            row=4, column=0, pady=5, padx=5, sticky="w")
+        #
+        self.button_register_student.grid(row=4, column=1, padx=5)
+        #
+        self.button_generate_pdf.grid(row=4, column=2)
 
     def table_info(self, body_table):
         """Función tabla de registro bitácora"""
@@ -199,3 +210,9 @@ class InfoDesign():
 
         for row in cursor.fetchall():
             self.tree.insert("", "end", values=row)
+
+    def recover_id(self):
+        """Función recuperar id"""
+
+    def generate_pdf(self):
+        """Función generar PDF"""
