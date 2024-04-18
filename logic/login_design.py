@@ -90,8 +90,9 @@ class Login(tk.Tk):
 
         if valid_access:
             if user == "admin" or user == "Admin":
-                self.destroy()
-                MainDesign()
+                body = self
+                self.clear_panel(self)
+                MainDesign(body)
             else:
                 messagebox.showinfo(
                     "Información", "Bienvenido al sistema de usuario")
@@ -99,3 +100,9 @@ class Login(tk.Tk):
             messagebox.showerror("Error", "Usuario o contraseña incorrectos")
             self.entry_user.delete(0, tk.END)
             self.entry_password.delete(0, tk.END)
+
+    def clear_panel(self, panel):
+        """Función que se encarga de limpiar el contenido del panel"""
+
+        for widget in panel.winfo_children():
+            widget.destroy()
