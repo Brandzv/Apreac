@@ -21,7 +21,7 @@ class RegisterDesign:
         """Función que crea el entry de ID"""
 
         self.label_id = tk.Label(
-            frame, text="Ingrese o escaneé ID:", font=("Helvetica", 13))
+            frame, text="Ingrese o escanee ID:", font=("Helvetica", 13))
 
         self.entry_id = ttk.Entry(frame, width=18, font=("Helvetica", 13))
 
