@@ -3,42 +3,45 @@
 import tkinter as tk
 from tkinter import font
 from config import LEFTBAR_COLOR, BODY_COLOR, TEXT_COLOR, HOVER_COLOR, HOVER_TEXT_COLOR
-from utility import util_window as centrar_ventana
-from logic.registro_design import RegisterDesign
-from logic.ctc_design import CtcDesign
-from logic.horario_design import ScheduleDesign
+# from utility import util_window as centrar_ventana
+# from logic.registro_design import RegisterDesign
+# from logic.ctc_design import CtcDesign
+# from logic.horario_design import ScheduleDesign
+import logic.open_panels
 
 
-class MainDesign(tk.Tk):
+class MainDesign():
     """Esta clase contiene las funciones de creación y configuración de la ventana"""
 
-    def __init__(self):
+    def __init__(self, body):
         super().__init__()
-        self.config_window()
+        # self.config_window()
+        self.body_main = body
+
         self.panel()
         self.leftbar_menu()
 
-    def config_window(self):
-        """Función que crea y configura la ventana"""
+    # def config_window(self):
+        # """Función que crea y configura la ventana"""
 
-        self.title('Registro de alumnos')
-        self.iconbitmap("./resource/logo.ico")
+        # self.title('Registro de alumnos')
+        # self.iconbitmap("./resource/logo.ico")
 
-        w, h = 840, 450
+        # w, h = 840, 450
 
-        self.geometry(f"{w}x{h}+0+0")
+        # self.geometry(f"{w}x{h}+0+0")
 
-        centrar_ventana.centrar_ventana(self, w, h)
+        # centrar_ventana.centrar_ventana(self, w, h)
 
     def panel(self):
         """Función donde se crean los paneles"""
 
         self.leftbar = tk.Frame(
-            self, bg=LEFTBAR_COLOR, width=200)
+            self.body_main, bg=LEFTBAR_COLOR, width=200)
         self.leftbar.pack(side=tk.LEFT, fill='both', expand=False)
 
         self.body = tk.Frame(
-            self, bg=BODY_COLOR,)
+            self.body_main, bg=BODY_COLOR,)
         self.body.pack(side=tk.RIGHT, fill='both', expand=True)
 
     def leftbar_menu(self):
@@ -90,18 +93,22 @@ class MainDesign(tk.Tk):
         """Función que abre panel de registro y limpia los paneles y contenidos de la ventana."""
 
         self.clear_panel(self.body)
-        RegisterDesign(self.body)
+        show_register_main = logic.open_panels.OpenPanel(self.body)
+        show_register_main.show_register_panel()
 
     def open_ctc_panel(self):
         """Función que abre panel de ctc y limpia los paneles y contenidos de la ventana."""
+
         self.clear_panel(self.body)
-        CtcDesign(self.body)
+        show_ctc_main = logic.open_panels.OpenPanel(self.body)
+        show_ctc_main.show_ctc_panel()
 
     def open_schedule_panel(self):
         """Función que abre panel de horario y limpia los paneles y contenidos de la ventana."""
 
         self.clear_panel(self.body)
-        ScheduleDesign(self.body)
+        show_schedule_main = logic.open_panels.OpenPanel(self.body)
+        show_schedule_main.show_schedule_panel()
 
     def clear_panel(self, panel):
         """Función que se encarga de limpiar el contenido del panel"""
