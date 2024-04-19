@@ -2,6 +2,7 @@
 import tkinter as tk
 import datetime
 from tkinter import ttk
+import logic.open_panels
 from conexion import cursor, conecta
 
 
@@ -213,6 +214,17 @@ class InfoDesign():
 
     def recover_id(self):
         """Función recuperar id"""
+        body = self.refresh
+        self.clear_panel(body)
+        # recover_from_main = logic.main_design.MainDesign(body)
+        # recover_from_main.open_register_panel()
+        show_register_design = logic.open_panels.OpenPanel(body)
+        show_register_design.show_register_panel()
 
     def generate_pdf(self):
         """Función generar PDF"""
+
+    def clear_panel(self, panel):
+        """Función que se encarga de limpiar el contenido del frame"""
+        for widget in panel.winfo_children():
+            widget.destroy()
