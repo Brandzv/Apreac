@@ -3,6 +3,7 @@ import tkinter as tk
 import datetime
 from tkinter import ttk
 import logic.open_panels
+import logic.bitacora_pdf
 from conexion import cursor, conecta
 
 
@@ -81,7 +82,7 @@ class InfoDesign():
             frame, text="Registrar", command=self.save_register, width=15, font=("Helvetica", 11))
         # Botón para generar PDF
         self.button_generate_pdf = tk.Button(
-            frame, text="Generar PDF", command=self.generate_pdf, width=15, font=("Helvetica", 11))
+            frame, text="Generar PDF", command=self.create_pdf, width=15, font=("Helvetica", 11))
 
         # Posicionar información en pantalla
         self.text_nombre.grid(row=1, column=0, pady=5, padx=5, sticky="w")
@@ -221,8 +222,10 @@ class InfoDesign():
         show_register_design = logic.open_panels.OpenPanel(body)
         show_register_design.show_register_panel()
 
-    def generate_pdf(self):
-        """Función generar PDF"""
+    def create_pdf(self):
+        """Función para generar el PDF"""
+        create_bitacora_pdf = logic.bitacora_pdf.BitacoraPDF()
+        create_bitacora_pdf.generate_bitacora(self)
 
     def clear_panel(self, panel):
         """Función que se encarga de limpiar el contenido del frame"""
