@@ -166,7 +166,8 @@ class InfoDesign():
             counter = 1
 
         # Campo "pc" en bd bitacoraUso
-        pc_uso = self.dropdown_pc.get()
+        pc_seleccionado = self.dropdown_pc.get()
+        pc_uso = f"PC{pc_seleccionado}"
 
         # Campo "fecha" en bd bitacoraUso
         time = datetime.datetime.now()
