@@ -90,6 +90,7 @@ class Login(tk.Tk):
 
         if valid_access:
             if user == "admin" or user == "Admin":
+                self.title('Registro de alumnos')
                 body = self
                 self.clear_panel(self)
                 MainDesign(body)
