@@ -3,10 +3,6 @@
 import tkinter as tk
 from tkinter import font
 from config import LEFTBAR_COLOR, BODY_COLOR, TEXT_COLOR, HOVER_COLOR, HOVER_TEXT_COLOR
-# from utility import util_window as centrar_ventana
-# from logic.registro_design import RegisterDesign
-# from logic.ctc_design import CtcDesign
-# from logic.horario_design import ScheduleDesign
 import logic.open_panels
 
 
@@ -15,23 +11,10 @@ class MainDesign():
 
     def __init__(self, body):
         super().__init__()
-        # self.config_window()
         self.body_main = body
 
         self.panel()
         self.leftbar_menu()
-
-    # def config_window(self):
-        # """Función que crea y configura la ventana"""
-
-        # self.title('Registro de alumnos')
-        # self.iconbitmap("./resource/logo.ico")
-
-        # w, h = 840, 450
-
-        # self.geometry(f"{w}x{h}+0+0")
-
-        # centrar_ventana.centrar_ventana(self, w, h)
 
     def panel(self):
         """Función donde se crean los paneles"""
