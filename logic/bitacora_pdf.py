@@ -30,19 +30,19 @@ class BitacoraPDF:
             title_style.leftIndent = 170
             title_style.leading = 30
 
+            story = []
+
             # Logo de la UNID
             logo_unid = './resource/LogoUnid.png'
-
-            story = []
             print_logo = Image(logo_unid, width=110,
                                height=45, hAlign='LEFT')
 
             title = "Bitácora de uso CTC1"
             p = Paragraph(title, title_style)
 
+            # Crear encabezado
             header_table_data = [[print_logo, p]]
             header_table = Table(header_table_data, colWidths=[110, 570])
-
             header_table.setStyle(header_style)
 
             # Estilo de la tabla
@@ -56,6 +56,7 @@ class BitacoraPDF:
                 ('GRID', (0, 0), (-1, -1), 1, 'black'),
             ])
 
+            current_date = time.strftime("%d/%m/%y")
             # Crear header de la tabla
             headers = ["No.", "PC", "Fecha", "Nombre de Usuario", "Alumno/Docente",
                        "Programa", "Hora de Entrada", "Hora de Salida", "Actividad"]
@@ -65,14 +66,14 @@ class BitacoraPDF:
 
             # Ejecutar consulta para obtener los datos para la tabla
             bitacora_uso = cursor.execute(
-                "SELECT no, pc, fecha, nombreAlumno, rol, programa, horaEntrada, horaSalida, actividad FROM bitacoraUso")
+                "SELECT no, pc, fecha, nombreAlumno, rol, programa, horaEntrada, horaSalida, actividad FROM bitacoraUso WHERE fecha = ?", (current_date,))
 
             # Obtener los datos de la base de datos y agregarlos a la lista de filas
             for fila in bitacora_uso.fetchall():
                 nombre_usuario = fila[3]
                 programa = fila[5]
 
-                # Dividir el texto en líneas de máximo 30 caracteres (ajusta según tus necesidades)
+                # Dividir el texto en líneas de máximo 30 caracteres
                 text_nombre_usuario = [nombre_usuario[i:i+30]
                                        for i in range(0, len(nombre_usuario), 30)]
                 text_programa = [programa[i:i+30]
@@ -86,9 +87,11 @@ class BitacoraPDF:
                 # Agregar la fila modificada a la lista de datos
                 data.append(fila_data)
 
+            # Crear la tabla
             table = Table(data)
             table.setStyle(bitacora_style)
 
+            # Agregar el encabezado y la tabla al PDF
             story.append(header_table)
             story.append(table)
 
