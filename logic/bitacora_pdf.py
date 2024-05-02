@@ -19,31 +19,35 @@ class BitacoraPDF:
             doc = SimpleDocTemplate(
                 f"BitacoraUso{date_current_time}.pdf", pagesize=landscape(letter))
 
-            # Estilo del encabezado
-            header_style = TableStyle([
-                ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-            ])
-
-            # Estilo del titulo
-            title_style = getSampleStyleSheet()['Normal']
-            title_style.fontSize = 24
-            title_style.leftIndent = 170
-            title_style.leading = 30
-
-            story = []
-
             # Logo de la UNID
             logo_unid = './resource/LogoUnid.png'
-            print_logo = Image(logo_unid, width=110,
-                               height=45, hAlign='LEFT')
+            print_logo = Image(logo_unid, width=110, height=45, hAlign='LEFT')
 
+            # Estilo del titulo
+            title_style = getSampleStyleSheet()['Title']
+            title_style.fontSize = 24
+            title_style.leftIndent = 130
+            title_style.leading = 30
+            # Titulo de la Bitacora
             title = "Bitácora de uso CTC1"
             p = Paragraph(title, title_style)
 
-            # Crear encabezado
-            header_table_data = [[print_logo, p]]
-            header_table = Table(header_table_data, colWidths=[110, 570])
-            header_table.setStyle(header_style)
+            # Crea encabezado del PDF
+            def header(canvas, doc):
+                # Guarda el estado actual del canvas
+                canvas.saveState()
+                # Calcula las dimensiones del logo para que se ajuste al ancho y al margen superior
+                w, h = print_logo.wrap(doc.width, doc.topMargin)
+                # Ajusta el desplazamiento vertical
+                print_logo.drawOn(
+                    canvas, doc.leftMargin, doc.height + doc.bottomMargin + doc.topMargin - h - 20)
+                # Calcula el ancho necesario para que p se ajuste correctamente dentro del documento
+                p.wrap(doc.width - doc.leftMargin -
+                       doc.rightMargin, doc.topMargin)
+                # Ajusta el desplazamiento vertical
+                p.drawOn(canvas, doc.leftMargin + 120, doc.height +
+                         doc.bottomMargin + doc.topMargin - h - 20)
+                canvas.restoreState()
 
             # Estilo de la tabla
             bitacora_style = TableStyle([
@@ -56,14 +60,14 @@ class BitacoraPDF:
                 ('GRID', (0, 0), (-1, -1), 1, 'black'),
             ])
 
-            current_date = time.strftime("%d/%m/%y")
             # Crear header de la tabla
             headers = ["No.", "PC", "Fecha", "Nombre de Usuario", "Alumno/Docente",
                        "Programa", "Hora de Entrada", "Hora de Salida", "Actividad"]
-
             # Crear la lista de filas
             data = [headers]
 
+            # Se usa como filtro de fecha actual
+            current_date = time.strftime("%d/%m/%y")
             # Ejecutar consulta para obtener los datos para la tabla
             bitacora_uso = cursor.execute(
                 "SELECT no, pc, fecha, nombreAlumno, rol, programa, horaEntrada, horaSalida, actividad FROM bitacoraUso WHERE fecha = ?", (current_date,))
@@ -76,6 +80,7 @@ class BitacoraPDF:
                 # Dividir el texto en líneas de máximo 30 caracteres
                 text_nombre_usuario = [nombre_usuario[i:i+30]
                                        for i in range(0, len(nombre_usuario), 30)]
+                #
                 text_programa = [programa[i:i+30]
                                  for i in range(0, len(programa), 30)]
 
@@ -87,14 +92,22 @@ class BitacoraPDF:
                 # Agregar la fila modificada a la lista de datos
                 data.append(fila_data)
 
-            # Crear la tabla
-            table = Table(data)
+            # Vincular headers con la tabla
+            table_data = data
+            # Crear la tabla y asignar ancho a a las columnas
+            table = Table(table_data, colWidths=[
+                          30, 50, 60, 170, 90, 80, 50, 50, 70])
             table.setStyle(bitacora_style)
+            # Configurar el encabezado para repetirse en todas las páginas
+            table.repeatRows = 1
 
-            # Agregar el encabezado y la tabla al PDF
-            story.append(header_table)
+            story = []
+            # Agregar la tabla al PDF
             story.append(table)
-
+            # Ajustes adicionales
             story[0].spaceAfter = 5
 
+            # Agregar el encabezado al PDF
+            doc.build([p], onFirstPage=header, onLaterPages=header)
+            # Construir el PDF
             doc.build(story)
