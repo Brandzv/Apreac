@@ -66,6 +66,7 @@ class BitacoraPDF:
             # Crear la lista de filas
             data = [headers]
 
+            numeros = list(range(1, 21))
             # Se usa como filtro de fecha actual
             current_date = time.strftime("%d/%m/%y")
             # Ejecutar consulta para obtener los datos para la tabla
@@ -89,6 +90,8 @@ class BitacoraPDF:
                 fila_data[3] = "\n".join(text_nombre_usuario)
                 fila_data[5] = "\n".join(text_programa)
 
+                fila_data[0] = numeros[0]
+                numeros.append(numeros.pop(0))
                 # Agregar la fila modificada a la lista de datos
                 data.append(fila_data)
 
@@ -96,7 +99,7 @@ class BitacoraPDF:
             table_data = data
             # Crear la tabla y asignar ancho a a las columnas
             table = Table(table_data, colWidths=[
-                          30, 50, 60, 170, 90, 80, 50, 50, 70])
+                          30, 50, 60, 170, 90, 80, 80, 80, 70])
             table.setStyle(bitacora_style)
             # Configurar el encabezado para repetirse en todas las páginas
             table.repeatRows = 1
