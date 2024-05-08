@@ -1,7 +1,11 @@
-"""Modulo para generar PDF de bitacora de uso"""
+"""
+@Author: Brandzv
+Fecha: 08/05/24
+Descripción: Modulo para generar un PDF de la Bitacora de uso con los registros del dia actual
+"""
 import datetime
 from reportlab.lib.pagesizes import letter, landscape
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Image
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Image, PageBreak
 from reportlab.lib.styles import getSampleStyleSheet
 from conexion import cursor
 
@@ -13,7 +17,7 @@ class BitacoraPDF:
         """Función para generar el PDF"""
 
         if crear_pdf:
-            # Nombrar archivo
+            # Se nombre el archivo con "BitacoraUso" "Dia/Mes/Año_Horas Minutos Segundos"
             time = datetime.datetime.now()
             date_current_time = time.strftime("%d-%m-%y_%H%M%S")
             doc = SimpleDocTemplate(
@@ -32,19 +36,19 @@ class BitacoraPDF:
             title = "Bitácora de uso CTC1"
             p = Paragraph(title, title_style)
 
-            # Crea encabezado del PDF
+            # Se crea el encabezado del PDF con Logo y Titulo de la bitacora de uso
             def header(canvas, doc):
                 # Guarda el estado actual del canvas
                 canvas.saveState()
                 # Calcula las dimensiones del logo para que se ajuste al ancho y al margen superior
                 w, h = print_logo.wrap(doc.width, doc.topMargin)
-                # Ajusta el desplazamiento vertical
+                # Ajusta el desplazamiento vertical del logo
                 print_logo.drawOn(
                     canvas, doc.leftMargin, doc.height + doc.bottomMargin + doc.topMargin - h - 20)
                 # Calcula el ancho necesario para que p se ajuste correctamente dentro del documento
                 p.wrap(doc.width - doc.leftMargin -
                        doc.rightMargin, doc.topMargin)
-                # Ajusta el desplazamiento vertical
+                # Ajusta el desplazamiento vertical del titulo
                 p.drawOn(canvas, doc.leftMargin + 120, doc.height +
                          doc.bottomMargin + doc.topMargin - h - 20)
                 canvas.restoreState()
@@ -63,54 +67,86 @@ class BitacoraPDF:
             # Crear header de la tabla
             headers = ["No.", "PC", "Fecha", "Nombre de Usuario", "Alumno/Docente",
                        "Programa", "Hora de Entrada", "Hora de Salida", "Actividad"]
-            # Crear la lista de filas
+            # Es la lista de los encabezados de la tabla
             data = [headers]
 
-            numeros = list(range(1, 21))
             # Se usa como filtro de fecha actual
             current_date = time.strftime("%d/%m/%y")
-            # Ejecutar consulta para obtener los datos para la tabla
+            # Ejecuta una consulta para obtener los datos que se imprimirán en la tabla
             bitacora_uso = cursor.execute(
                 "SELECT no, pc, fecha, nombreAlumno, rol, programa, horaEntrada, horaSalida, actividad FROM bitacoraUso WHERE fecha = ?", (current_date,))
 
+            # Lista de numeros del 1 al 20 para la columna "No."
+            numeros = list(range(1, 21))
+            # Lista "story" vacía
+            story = []
+
             # Obtener los datos de la base de datos y agregarlos a la lista de filas
             for fila in bitacora_uso.fetchall():
+                # Se selecciona la fila 3 y 5 por que son las que pueden ser textos largos
                 nombre_usuario = fila[3]
                 programa = fila[5]
 
-                # Dividir el texto en líneas de máximo 30 caracteres
+                # Divide el texto en líneas de máximo 30 caracteres
+                # para que se pueda adaptar a las celdas
                 text_nombre_usuario = [nombre_usuario[i:i+30]
                                        for i in range(0, len(nombre_usuario), 30)]
                 #
                 text_programa = [programa[i:i+30]
                                  for i in range(0, len(programa), 30)]
 
-                # Convertir la tupla a una lista
+                # Convierte la tupla a una lista para poder formatear los textos
+                # antes de imprimirlos en la tabla
                 fila_data = list(fila)
                 fila_data[3] = "\n".join(text_nombre_usuario)
                 fila_data[5] = "\n".join(text_programa)
 
+                # Se usa para imprimir los numero del 1 al 20 en la columna "No."
                 fila_data[0] = numeros[0]
                 numeros.append(numeros.pop(0))
                 # Agregar la fila modificada a la lista de datos
                 data.append(fila_data)
 
-            # Vincular headers con la tabla
-            table_data = data
-            # Crear la tabla y asignar ancho a a las columnas
-            table = Table(table_data, colWidths=[
-                          30, 50, 60, 170, 90, 80, 80, 80, 70])
-            table.setStyle(bitacora_style)
-            # Configurar el encabezado para repetirse en todas las páginas
-            table.repeatRows = 1
+                # Si llega la tabla a 20 filas crea una pagina nueva
+                if len(data) == 21:
+                    # Vincular headers con la tabla (Se uso asi en un principio por que
+                    # causaba un error usar "data" directamente, por eso lo deje asi)
+                    table_data = data
+                    # Crea la tabla, asigna headers y asigna ancho a las columnas
+                    table = Table(table_data, colWidths=[
+                        30, 50, 60, 170, 90, 80, 80, 80, 70])
+                    #
+                    table.setStyle(bitacora_style)
+                    # Configurar el encabezado para repetirse en todas las páginas
+                    table.repeatRows = 1
 
-            story = []
-            # Agregar la tabla al PDF
-            story.append(table)
-            # Ajustes adicionales
-            story[0].spaceAfter = 5
+                    # Agregar la tabla al PDF
+                    story.append(table)
+                    # Ajustes adicionales (Creo que es un "Margin Bottom")
+                    story[0].spaceAfter = 5
 
-            # Agregar el encabezado al PDF
+                    # Salta de pagina cuando llega a 20 filas
+                    story.append(PageBreak())
+
+                    # Limpiar la lista de filas para la siguiente página
+                    data = [headers]
+
+            # Si quedan filas sin procesar, agrega mas tablas al PDF
+            if len(data) > 1:
+                # Vincular headers con la tabla (Se uso asi en un principio por que
+                # causaba un error usar "data" directamente, por eso lo deje asi)
+                table_data = data
+                # Crea la tabla, asigna headers y asigna ancho a las columnas
+                table = Table(table_data, colWidths=[
+                              30, 50, 60, 170, 90, 80, 80, 80, 70])
+                #
+                table.setStyle(bitacora_style)
+                # Configurar el encabezado para repetirse en todas las páginas
+                table.repeatRows = 1
+                # Agregar la tabla al PDF
+                story.append(table)
+
+            # Agrega el encabezado a todas las paginas del PDF
             doc.build([p], onFirstPage=header, onLaterPages=header)
-            # Construir el PDF
+            # Construye el PDF
             doc.build(story)
