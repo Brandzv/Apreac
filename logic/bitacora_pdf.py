@@ -114,7 +114,7 @@ class BitacoraPDF:
                     table_data = data
                     # Crea la tabla, asigna headers y asigna ancho a las columnas
                     table = Table(table_data, colWidths=[
-                        30, 50, 60, 170, 90, 80, 80, 80, 70])
+                        30, 40, 60, 170, 90, 80, 90, 80, 70])
                     #
                     table.setStyle(bitacora_style)
                     # Configurar el encabezado para repetirse en todas las páginas
@@ -138,7 +138,7 @@ class BitacoraPDF:
                 table_data = data
                 # Crea la tabla, asigna headers y asigna ancho a las columnas
                 table = Table(table_data, colWidths=[
-                              30, 50, 60, 170, 90, 80, 80, 80, 70])
+                              30, 40, 60, 170, 90, 80, 90, 80, 70])
                 #
                 table.setStyle(bitacora_style)
                 # Configurar el encabezado para repetirse en todas las páginas
