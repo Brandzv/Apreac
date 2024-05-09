@@ -1,7 +1,7 @@
 """Modulo de diseño del panel registro de información"""
 import tkinter as tk
 import datetime
-from tkinter import ttk
+from tkinter import ttk, messagebox
 import logic.open_panels
 import logic.bitacora_pdf
 from conexion import cursor, conecta
@@ -14,20 +14,28 @@ class InfoDesign():
         # Cambio de tamaño del frame
         frame.pack(fill="x", padx=70, pady=2, ipady=5)
 
+        # Se usara para refrescar la tabla al guardar los registros
         self.refresh = body_table
 
+        # Se selecciona los datos necesarios para mostrar en los input
         cursor.execute(
             f"SELECT id, nombres, apellidoPaterno, apellidoMaterno, programa, rol FROM alumnos WHERE ID = {search_id}")
         alumno = cursor.fetchone()
 
+        # Guarda los cambios
         conecta.commit()
 
+        # Verifica si existe un alumno con la ID ingresada
         if alumno:
+            # Si existe alumno con la ID entonces se desempaquetara los valores del alumno
+            # en las siguientes variables
             self.id_alumno, self.nombre, self.apellido_paterno, self.apellido_materno, self.programa, self.rol = alumno
+            # Se llaman los métodos
             self.student_info(frame)
             self.table_info(body_table)
             self.show_registers(body_table)
         else:
+            # En caso de que no exista alumno con la ID ingresada se mostrara el siguiente texto
             self.lbl = tk.Label(
                 frame, text="Estudiante no encontrado", font=("Helvetica", 13))
             self.lbl.pack()
@@ -123,9 +131,11 @@ class InfoDesign():
     def table_info(self, body_table):
         """Función tabla de registro bitácora"""
 
+        # Configura el widget tree con las columnas y encabezados siguientes
         self.tree = ttk.Treeview(body_table, columns=(
             "numero_registro", "numero_pc", "fecha", "nombre_alumno", "rol", "programa", "hr_entrada", "hr_salida", "actividad"), show="headings")
 
+        # Define cómo se mostrará el encabezado de las columnas en el widget tree
         self.tree.heading("#1", text="No.", anchor="center")
         self.tree.heading("#2", text="PC", anchor="center")
         self.tree.heading("#3", text="Fecha", anchor="center")
@@ -136,6 +146,7 @@ class InfoDesign():
         self.tree.heading("#8", text="Hora salida", anchor="center")
         self.tree.heading("#9", text="Actividad", anchor="center")
 
+        # Configura ancho y alineación de las columnas
         self.tree.column("#1", width=10, anchor="center")
         self.tree.column("#2", width=10, anchor="center")
         self.tree.column("#3", width=45, anchor="center")
@@ -146,80 +157,97 @@ class InfoDesign():
         self.tree.column("#8", width=50, anchor="center")
         self.tree.column("#9", width=50, anchor="center")
 
+        # Configura la posición de tree y el como se expande
         self.tree.pack(fill="both", expand=True, pady=1, padx=5)
 
     def save_register(self):
         """Función guardar registro"""
 
-        # Campo "no" en bd bitacoraUso
-        cursor.execute(
-            "SELECT no FROM bitacoraUso ORDER BY ROWID DESC LIMIT 1")
-        result = cursor.fetchone()
-        #
-        if result:
-            last_number = result[0]
-        else:
-            last_number = 0
-        #
-        counter = last_number + 1
-        if counter > 20:
-            counter = 1
-
-        # Campo "pc" en bd bitacoraUso
+        # Obtener valores de los campos
         pc_seleccionado = self.dropdown_pc.get()
-        pc_uso = f"PC{pc_seleccionado}"
-
-        # Campo "fecha" en bd bitacoraUso
-        time = datetime.datetime.now()
-        #
-        date = time.strftime("%d/%m/%y")
-
-        # Campo "hora" en bd bitacoraUso
-        hour = time.strftime("%H:%M")
-
-        # Campo "nombreAlumno" en bd bitacoraUso
         save_nombre = self.show_nombre.get()
         save_apellido_paterno = self.show_apellido_paterno.get()
-        save_apellido_amaterno = self.show_apellido_materno.get()
-        #
-        nombre_completo = f"{save_nombre} {save_apellido_paterno} {save_apellido_amaterno}"
-
-        # Campo "programa" en bd bitacoraUso
+        save_apellido_materno = self.show_apellido_materno.get()
         programa = self.show_programa.get()
-
-        # Campo "rol" en bd bitacoraUso
         rol = self.show_rol.get()
-
-        # Campo "actividad" en bd bitacoraUso
         actividad = self.dropdown_activity.get()
 
-        cursor.execute(
-            "INSERT INTO bitacoraUso (no, pc, fecha, nombreAlumno, rol, programa, horaEntrada, actividad) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (counter, pc_uso, date, nombre_completo, rol, programa, hour, actividad))
+        # Se usa para obligar tener en regla todos los campos
+        if pc_seleccionado and save_nombre and save_apellido_paterno and save_apellido_materno and programa and rol and actividad:
 
-        conecta.commit()
+            # Asegura de que se haya seleccionado una PC
+            if pc_seleccionado != "Selección PC":
 
+                # Campo "no" en bd bitacoraUso
+                cursor.execute(
+                    "SELECT no FROM bitacoraUso ORDER BY ROWID DESC LIMIT 1")
+                result = cursor.fetchone()
+                # Checa cual es el ultimo numero de la columna "No." para seguir desde el numero
+                # donde se quedo en la numeración de los registros
+                if result:
+                    last_number = result[0]
+                else:
+                    last_number = 0
+                #
+                counter = last_number + 1
+                if counter > 20:
+                    counter = 1
+
+                # Campo "pc" en bd bitacoraUso
+                pc_uso = f"PC{pc_seleccionado}"
+
+                # Campo "fecha" en bd bitacoraUso
+                time = datetime.datetime.now()
+                #
+                date = time.strftime("%d/%m/%y")
+
+                # Campo "hora" en bd bitacoraUso
+                hour = time.strftime("%H:%M")
+
+                # Campo "nombreAlumno" en bd bitacoraUso
+                nombre_completo = f"{save_nombre} {save_apellido_paterno} {save_apellido_materno}"
+
+                # Guarda los datos obtenidos en la tabla "bitacoraUso"
+                cursor.execute(
+                    "INSERT INTO bitacoraUso (no, pc, fecha, nombreAlumno, rol, programa, horaEntrada, actividad) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (counter, pc_uso, date, nombre_completo, rol, programa, hour, actividad))
+
+                conecta.commit()
+
+            else:
+                messagebox.showerror(
+                    "Error", "Por favor, selecciona una PC")
+        else:
+            messagebox.showerror(
+                "Error", "Por favor, completa todos los campos")
+
+        # Refresca la tabla cuando se guarda un registro
         self.show_registers(self.refresh)
 
     def show_registers(self, body_table):
         """Función mostrar registros"""
 
+        # Borra todas las filas previamente agregadas al widget tree, lo que es útil
+        # antes de volver a cargar nuevos datos en el widget tree
         self.tree.delete(*self.tree.get_children())
 
+        # Se usa como filtro de fecha actual
         fecha_actual = datetime.datetime.now().strftime("%d/%m/%y")
 
         # Seleccionar registros a mostrar y filtrar por fecha
         cursor.execute(
             "SELECT no, pc, fecha, nombreAlumno, rol, programa, horaEntrada, horaSalida, actividad FROM bitacoraUso WHERE fecha = ?", (fecha_actual,))
 
+        # Agrega filas al widget tree con los valores obtenidos de la consulta a la base de datos
         for row in cursor.fetchall():
             self.tree.insert("", "end", values=row)
 
     def recover_id(self):
         """Función recuperar id"""
+
+        # Limpia el frame "body"
         body = self.refresh
         self.clear_panel(body)
-        # recover_from_main = logic.main_design.MainDesign(body)
-        # recover_from_main.open_register_panel()
+        # Abre el panel "register_design" en frame body
         show_register_design = logic.open_panels.OpenPanel(body)
         show_register_design.show_register_panel()
 
