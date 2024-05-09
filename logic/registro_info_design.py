@@ -1,4 +1,8 @@
-"""Modulo de diseño del panel registro de información"""
+"""
+@Author: Brandzv
+Fecha: 09/05/24
+Descripción: Modulo que muestra el panel registro de información de los alumnos
+"""
 import tkinter as tk
 import datetime
 from tkinter import ttk, messagebox
@@ -213,6 +217,13 @@ class InfoDesign():
 
                 conecta.commit()
 
+                # Limpia el frame "body"
+                body = self.refresh
+                self.clear_panel(body)
+                # Abre el panel "register_design" en frame body
+                show_register_design = logic.open_panels.OpenPanel(body)
+                show_register_design.show_register_panel()
+
             else:
                 messagebox.showerror(
                     "Error", "Por favor, selecciona una PC")
@@ -221,7 +232,7 @@ class InfoDesign():
                 "Error", "Por favor, completa todos los campos")
 
         # Refresca la tabla cuando se guarda un registro
-        self.show_registers(self.refresh)
+        # ? self.show_registers(self.refresh) <--- Por si se llega a utilizar en el futuro
 
     def show_registers(self, body_table):
         """Función mostrar registros"""
