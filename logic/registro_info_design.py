@@ -205,15 +205,40 @@ class InfoDesign():
                 #
                 date = time.strftime("%d/%m/%y")
 
-                # Campo "hora" en bd bitacoraUso
-                hour = time.strftime("%H:%M")
+                # Obtener el día de la semana (0 = lunes, 1 = martes, ..., 6 = domingo)
+                current_day = time.weekday()
 
-                # Campo "nombreAlumno" en bd bitacoraUso
+                # Campo "hora de entrada" en bd bitacoraUso
+                current_time = time.strftime("%H:%M")
+
+                if actividad == "Clase":
+                    # Consulta para obtener la próxima hora de entrada
+                    cursor.execute(
+                        "SELECT horaEntrada FROM horarios WHERE diaSemana = ? AND horaEntrada > ? ORDER BY horaEntrada LIMIT 1", (
+                            current_day, current_time))
+                    entry_time = cursor.fetchone()
+
+                    if entry_time:
+                        entry_time = entry_time[0]
+                        # Consulta para obtener la hora de salida correspondiente
+                        cursor.execute(
+                            "SELECT horaSalida FROM horarios WHERE diaSemana = ? AND horaEntrada = ?", (
+                                current_day, entry_time))
+                        departure_time = cursor.fetchone()[0]
+                    else:
+                        # Si no hay próxima hora de entrada
+                        departure_time = None
+                else:
+                    # Si se elije tarea
+                    departure_time = None
+
+                # Campo "nombreAlumno" en bd bitacoraUso-{
                 nombre_completo = f"{save_nombre} {save_apellido_paterno} {save_apellido_materno}"
 
                 # Guarda los datos obtenidos en la tabla "bitacoraUso"
                 cursor.execute(
-                    "INSERT INTO bitacoraUso (no, pc, fecha, nombreAlumno, rol, programa, horaEntrada, actividad) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (counter, pc_uso, date, nombre_completo, rol, programa, hour, actividad))
+                    "INSERT INTO bitacoraUso (no, pc, fecha, nombreAlumno, rol, programa, horaEntrada, horaSalida, actividad) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (
+                        counter, pc_uso, date, nombre_completo, rol, programa, current_time, departure_time, actividad))
 
                 conecta.commit()
 
