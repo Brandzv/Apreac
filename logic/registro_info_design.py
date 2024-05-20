@@ -5,6 +5,7 @@ Descripción: Modulo que muestra el panel registro de información de los alumno
 """
 import tkinter as tk
 import datetime
+from datetime import datetime, timedelta
 from tkinter import ttk, messagebox
 import logic.open_panels
 import logic.bitacora_pdf
@@ -18,6 +19,7 @@ class InfoDesign():
         # Cambio de tamaño del frame
         frame.pack(fill="x", padx=70, pady=2, ipady=5)
 
+        self.new_window = frame
         # Se usara para refrescar la tabla al guardar los registros
         self.refresh = body_table
 
@@ -201,7 +203,7 @@ class InfoDesign():
                 pc_uso = f"PC{pc_seleccionado}"
 
                 # Campo "fecha" en bd bitacoraUso
-                time = datetime.datetime.now()
+                time = datetime.now()
                 #
                 date = time.strftime("%d/%m/%y")
 
@@ -211,35 +213,103 @@ class InfoDesign():
                 # Campo "hora de entrada" en bd bitacoraUso
                 current_time = time.strftime("%H:%M")
 
+                # Se usa para cuando se seleccione la opción "Clase" entonces obtendrá
+                # la hora de entrada de la clase mas cercana y su respectiva hora de salida
                 if actividad == "Clase":
                     # Consulta para obtener la próxima hora de entrada
                     cursor.execute(
                         "SELECT horaEntrada FROM horarios WHERE diaSemana = ? AND horaEntrada > ? ORDER BY horaEntrada LIMIT 1", (
                             current_day, current_time))
+                    # Hora de entrada de las clases
                     entry_time = cursor.fetchone()
 
                     if entry_time:
+                        # Verifica si hay una hora de entrada disponible y, si es así,
+                        # la almacena en la variable entry_time
                         entry_time = entry_time[0]
-                        # Consulta para obtener la hora de salida correspondiente
+                        # Consulta para obtener la hora de salida
                         cursor.execute(
-                            "SELECT horaSalida FROM horarios WHERE diaSemana = ? AND horaEntrada = ?", (
-                                current_day, entry_time))
+                            "SELECT horaSalida FROM horarios WHERE diaSemana = ? AND horaEntrada = ?",
+                            (current_day, entry_time))
+                        # Hora de salida de las clases
                         departure_time = cursor.fetchone()[0]
                     else:
-                        # Si no hay próxima hora de entrada
-                        departure_time = None
+                        # Este código es cuando hay una clase en curso
+                        #! Error, Selecciona por dia de semana, osea selecciona la primera hora de salida del dia
+                        cursor.execute(
+                            "SELECT horaEntrada FROM horarios WHERE diaSemana = ? ORDER BY horaEntrada LIMIT 1",
+                            (current_day,))
+                        next_entry_time = cursor.fetchone()[0]
+                        # Consulta para obtener la hora de salida de la próxima clase
+                        cursor.execute(
+                            "SELECT horaSalida FROM horarios WHERE diaSemana = ? AND horaEntrada = ?",
+                            (current_day, next_entry_time))
+                        departure_time = cursor.fetchone()[0]
+
+                elif actividad == "Tarea":
+                    def close_popup():
+                        # Obtiene la opción seleccionada del menú desplegable
+                        opcion_actual = opcion_seleccionada.get()
+                        # Destruye la ventana emergente
+                        popup_tarea.destroy()
+
+                        # Calcula la hora de salida en función de la opción seleccionada
+                        if opcion_actual == "1 hora":
+                            current_time_tarea = datetime.now().time()
+                            formatted_departure_time = (datetime.combine(
+                                datetime.today(), current_time_tarea) + timedelta(hours=1)).time()
+                        elif opcion_actual == "1:30 horas":
+                            current_time_tarea = datetime.now().time()
+                            formatted_departure_time = (datetime.combine(
+                                datetime.today(), current_time_tarea) + timedelta(hours=1, minutes=30)).time()
+                        elif opcion_actual == "2 horas":
+                            current_time_tarea = datetime.now().time()
+                            formatted_departure_time = (datetime.combine(
+                                datetime.today(), current_time_tarea) + timedelta(hours=2)).time()
+                        else:
+                            # Muestra un mensaje de error si la opción no es válida
+                            messagebox.showerror("Error", "Opción no válida seleccionada")
+                            return
+
+                        # Convierte la hora de salida a formato HH:MM
+                        departure_time = formatted_departure_time.strftime("%H:%M")
+
+                        # Inserta los datos en la base de datos
+                        cursor.execute("INSERT INTO bitacoraUso (no, pc, fecha, nombreAlumno, rol, programa, horaEntrada, horaSalida, actividad) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                                    (counter, pc_uso, date, nombre_completo, rol, programa, current_time, departure_time, actividad))
+                        conecta.commit()
+
+                    # Crea una ventana emergente
+                    popup_tarea = tk.Toplevel(self.new_window)
+                    popup_tarea.title("Selecciona una opción")
+
+                    # Define las opciones para el menú desplegable
+                    opciones = ["1 hora", "1:30 horas", "2 horas"]
+                    opcion_seleccionada = tk.StringVar(value=opciones[0])
+
+                    # Crea una etiqueta y un menú desplegable
+                    label = tk.Label(popup_tarea, text="Selecciona una opción:")
+                    option_menu = tk.OptionMenu(popup_tarea, opcion_seleccionada, *opciones)
+
+                    # Crea un botón para registrar la opción seleccionada
+                    button_register_tarea = tk.Button(
+                        popup_tarea, text="Registrar", command=close_popup, width=15, font=("Helvetica", 11))
+
+                    # Empaqueta los widgets en la ventana emergente
+                    label.pack()
+                    option_menu.pack()
+                    button_register_tarea.pack()
                 else:
-                    # Si se elije tarea
+                    # Esta opción se da si no hay una clase después o entre clases
                     departure_time = None
 
-                # Campo "nombreAlumno" en bd bitacoraUso-{
+                # Campo "nombreAlumno" en bd bitacoraUso
                 nombre_completo = f"{save_nombre} {save_apellido_paterno} {save_apellido_materno}"
 
                 # Guarda los datos obtenidos en la tabla "bitacoraUso"
                 cursor.execute(
-                    "INSERT INTO bitacoraUso (no, pc, fecha, nombreAlumno, rol, programa, horaEntrada, horaSalida, actividad) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (
-                        counter, pc_uso, date, nombre_completo, rol, programa, current_time, departure_time, actividad))
-
+                    "INSERT INTO bitacoraUso (no, pc, fecha, nombreAlumno, rol, programa, horaEntrada, horaSalida, actividad) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    (counter, pc_uso, date, nombre_completo, rol, programa, current_time, departure_time, actividad))
                 conecta.commit()
 
                 # Limpia el frame "body"
@@ -267,7 +337,7 @@ class InfoDesign():
         self.tree.delete(*self.tree.get_children())
 
         # Se usa como filtro de fecha actual
-        fecha_actual = datetime.datetime.now().strftime("%d/%m/%y")
+        fecha_actual = datetime.now().strftime("%d/%m/%y")
 
         # Seleccionar registros a mostrar y filtrar por fecha
         cursor.execute(
