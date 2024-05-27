@@ -213,38 +213,40 @@ class InfoDesign():
                 # Campo "hora de entrada" en bd bitacoraUso
                 current_time = time.strftime("%H:%M")
 
-                # Se usa para cuando se seleccione la opción "Clase" entonces obtendrá
+                # Campo "nombreAlumno" en bd bitacoraUso
+                nombre_completo = f"{save_nombre} {save_apellido_paterno} {save_apellido_materno}"
+
+                # Se usa para cuando se seleccione la opción "Clase" entonces verificara
+                # si hay una clase en curso y si no hay una clase en curso obtiene
                 # la hora de entrada de la clase mas cercana y su respectiva hora de salida
                 if actividad == "Clase":
-                    # Consulta para obtener la próxima hora de entrada
+                    # Verifica si hay una clase en curso
                     cursor.execute(
-                        "SELECT horaEntrada FROM horarios WHERE diaSemana = ? AND horaEntrada > ? ORDER BY horaEntrada LIMIT 1", (
-                            current_day, current_time))
-                    # Hora de entrada de las clases
-                    entry_time = cursor.fetchone()
+                        "SELECT horaEntrada, horaSalida FROM horarios WHERE diaSemana = ? AND horaEntrada <= ? AND horaSalida >= ? ORDER BY horaEntrada DESC LIMIT 1",
+                        (current_day, current_time, current_time))
+                    # Guarda los datos obtenidos en las variables "entry_time" y "departure_time"
+                    entry_time, departure_time = cursor.fetchone() or (None, None)
 
-                    if entry_time:
-                        # Verifica si hay una hora de entrada disponible y, si es así,
-                        # la almacena en la variable entry_time
-                        entry_time = entry_time[0]
-                        # Consulta para obtener la hora de salida
+                    if not entry_time:
+                        # No hay una clase en curso, obtén la hora de entrada más cercana
                         cursor.execute(
-                            "SELECT horaSalida FROM horarios WHERE diaSemana = ? AND horaEntrada = ?",
-                            (current_day, entry_time))
-                        # Hora de salida de las clases
-                        departure_time = cursor.fetchone()[0]
-                    else:
-                        # Este código es cuando hay una clase en curso
-                        #! Error, Selecciona por dia de semana, osea selecciona la primera hora de salida del dia
-                        cursor.execute(
-                            "SELECT horaEntrada FROM horarios WHERE diaSemana = ? ORDER BY horaEntrada LIMIT 1",
-                            (current_day,))
-                        next_entry_time = cursor.fetchone()[0]
-                        # Consulta para obtener la hora de salida de la próxima clase
-                        cursor.execute(
-                            "SELECT horaSalida FROM horarios WHERE diaSemana = ? AND horaEntrada = ?",
-                            (current_day, next_entry_time))
-                        departure_time = cursor.fetchone()[0]
+                            "SELECT horaEntrada, horaSalida FROM horarios WHERE diaSemana = ? AND horaEntrada > ? ORDER BY horaEntrada LIMIT 1",
+                            (current_day, current_time))
+                        # Guarda los datos obtenidos en las variables "entry_time" y "departure_time"
+                        entry_time, departure_time = cursor.fetchone() or (None, None)
+
+                    # Guarda los datos obtenidos en la tabla "bitacoraUso"
+                    cursor.execute(
+                        "INSERT INTO bitacoraUso (no, pc, fecha, nombreAlumno, rol, programa, horaEntrada, horaSalida, actividad) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        (counter, pc_uso, date, nombre_completo, rol, programa, current_time, departure_time, actividad))
+                    conecta.commit()
+
+                    # Limpia el frame "body"
+                    body = self.refresh
+                    self.clear_panel(body)
+                    # Abre el panel "register_design" en frame body
+                    show_register_design = logic.open_panels.OpenPanel(body)
+                    show_register_design.show_register_panel()
 
                 elif actividad == "Tarea":
                     def close_popup():
@@ -255,29 +257,46 @@ class InfoDesign():
 
                         # Calcula la hora de salida en función de la opción seleccionada
                         if opcion_actual == "1 hora":
+                            # Obtiene la hora actual
                             current_time_tarea = datetime.now().time()
+                            # Agrega 1 hora a la hora actual
                             formatted_departure_time = (datetime.combine(
                                 datetime.today(), current_time_tarea) + timedelta(hours=1)).time()
                         elif opcion_actual == "1:30 horas":
+                            # Obtiene la hora actual
                             current_time_tarea = datetime.now().time()
+                            # Agrega 1 hora y 30 minutos a la hora actual
                             formatted_departure_time = (datetime.combine(
                                 datetime.today(), current_time_tarea) + timedelta(hours=1, minutes=30)).time()
                         elif opcion_actual == "2 horas":
+                            # Obtiene la hora actual
                             current_time_tarea = datetime.now().time()
+                            # Agrega 2 horas a la hora actual
                             formatted_departure_time = (datetime.combine(
                                 datetime.today(), current_time_tarea) + timedelta(hours=2)).time()
                         else:
                             # Muestra un mensaje de error si la opción no es válida
-                            messagebox.showerror("Error", "Opción no válida seleccionada")
+                            messagebox.showerror(
+                                "Error", "Opción no válida seleccionada")
                             return
 
                         # Convierte la hora de salida a formato HH:MM
-                        departure_time = formatted_departure_time.strftime("%H:%M")
+                        departure_time = formatted_departure_time.strftime(
+                            "%H:%M")
 
-                        # Inserta los datos en la base de datos
-                        cursor.execute("INSERT INTO bitacoraUso (no, pc, fecha, nombreAlumno, rol, programa, horaEntrada, horaSalida, actividad) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                                    (counter, pc_uso, date, nombre_completo, rol, programa, current_time, departure_time, actividad))
+                        # Guarda los datos obtenidos en la tabla "bitacoraUso"
+                        cursor.execute(
+                            "INSERT INTO bitacoraUso (no, pc, fecha, nombreAlumno, rol, programa, horaEntrada, horaSalida, actividad) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                            (counter, pc_uso, date, nombre_completo, rol, programa, current_time, departure_time, actividad))
                         conecta.commit()
+
+                        # Limpia el frame "body"
+                        body = self.refresh
+                        self.clear_panel(body)
+                        # Abre el panel "register_design" en frame body
+                        show_register_design = logic.open_panels.OpenPanel(
+                            body)
+                        show_register_design.show_register_panel()
 
                     # Crea una ventana emergente
                     popup_tarea = tk.Toplevel(self.new_window)
@@ -288,8 +307,10 @@ class InfoDesign():
                     opcion_seleccionada = tk.StringVar(value=opciones[0])
 
                     # Crea una etiqueta y un menú desplegable
-                    label = tk.Label(popup_tarea, text="Selecciona una opción:")
-                    option_menu = tk.OptionMenu(popup_tarea, opcion_seleccionada, *opciones)
+                    label = tk.Label(
+                        popup_tarea, text="Selecciona una opción:")
+                    option_menu = tk.OptionMenu(
+                        popup_tarea, opcion_seleccionada, *opciones)
 
                     # Crea un botón para registrar la opción seleccionada
                     button_register_tarea = tk.Button(
@@ -302,22 +323,6 @@ class InfoDesign():
                 else:
                     # Esta opción se da si no hay una clase después o entre clases
                     departure_time = None
-
-                # Campo "nombreAlumno" en bd bitacoraUso
-                nombre_completo = f"{save_nombre} {save_apellido_paterno} {save_apellido_materno}"
-
-                # Guarda los datos obtenidos en la tabla "bitacoraUso"
-                cursor.execute(
-                    "INSERT INTO bitacoraUso (no, pc, fecha, nombreAlumno, rol, programa, horaEntrada, horaSalida, actividad) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                    (counter, pc_uso, date, nombre_completo, rol, programa, current_time, departure_time, actividad))
-                conecta.commit()
-
-                # Limpia el frame "body"
-                body = self.refresh
-                self.clear_panel(body)
-                # Abre el panel "register_design" en frame body
-                show_register_design = logic.open_panels.OpenPanel(body)
-                show_register_design.show_register_panel()
 
             else:
                 messagebox.showerror(
