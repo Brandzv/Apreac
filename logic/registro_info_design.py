@@ -26,25 +26,25 @@ class InfoDesign():
         # Se selecciona los datos necesarios para mostrar en los input
         cursor.execute(
             f"SELECT id, nombres, apellidoPaterno, apellidoMaterno, programa, rol FROM alumnos WHERE ID = {search_id}")
-        alumno = cursor.fetchone()
+        student = cursor.fetchone()
 
         # Guarda los cambios
         conecta.commit()
 
         # Verifica si existe un alumno con la ID ingresada
-        if alumno:
+        if student:
             # Si existe alumno con la ID entonces se desempaquetara los valores del alumno
             # en las siguientes variables
-            self.id_alumno, self.nombre, self.apellido_paterno, self.apellido_materno, self.programa, self.rol = alumno
+            self.id_alumno, self.nombre, self.apellido_paterno, self.apellido_materno, self.programa, self.rol = student
             # Se llaman los métodos
             self.student_info(frame)
             self.table_info(body_table)
             self.show_registers(body_table)
         else:
             # En caso de que no exista alumno con la ID ingresada se mostrara el siguiente texto
-            self.lbl = tk.Label(
+            self.student_not_found = tk.Label(
                 frame, text="Estudiante no encontrado", font=("Helvetica", 13))
-            self.lbl.pack()
+            self.student_not_found.pack()
 
     def student_info(self, frame):
         """Función mostrar información de alumno"""
@@ -251,29 +251,29 @@ class InfoDesign():
                 elif actividad == "Tarea":
                     def close_popup():
                         # Obtiene la opción seleccionada del menú desplegable
-                        opcion_actual = opcion_seleccionada.get()
+                        current_option = opcion_seleccionada.get()
                         # Destruye la ventana emergente
-                        popup_tarea.destroy()
+                        popup_task.destroy()
 
                         # Calcula la hora de salida en función de la opción seleccionada
-                        if opcion_actual == "1 hora":
+                        if current_option == "1 hora":
                             # Obtiene la hora actual
-                            current_time_tarea = datetime.now().time()
+                            current_time_task = datetime.now().time()
                             # Agrega 1 hora a la hora actual
                             formatted_departure_time = (datetime.combine(
-                                datetime.today(), current_time_tarea) + timedelta(hours=1)).time()
-                        elif opcion_actual == "1:30 horas":
+                                datetime.today(), current_time_task) + timedelta(hours=1)).time()
+                        elif current_option == "1:30 horas":
                             # Obtiene la hora actual
-                            current_time_tarea = datetime.now().time()
+                            current_time_task = datetime.now().time()
                             # Agrega 1 hora y 30 minutos a la hora actual
                             formatted_departure_time = (datetime.combine(
-                                datetime.today(), current_time_tarea) + timedelta(hours=1, minutes=30)).time()
-                        elif opcion_actual == "2 horas":
+                                datetime.today(), current_time_task) + timedelta(hours=1, minutes=30)).time()
+                        elif current_option == "2 horas":
                             # Obtiene la hora actual
-                            current_time_tarea = datetime.now().time()
+                            current_time_task = datetime.now().time()
                             # Agrega 2 horas a la hora actual
                             formatted_departure_time = (datetime.combine(
-                                datetime.today(), current_time_tarea) + timedelta(hours=2)).time()
+                                datetime.today(), current_time_task) + timedelta(hours=2)).time()
                         else:
                             # Muestra un mensaje de error si la opción no es válida
                             messagebox.showerror(
@@ -299,27 +299,27 @@ class InfoDesign():
                         show_register_design.show_register_panel()
 
                     # Crea una ventana emergente
-                    popup_tarea = tk.Toplevel(self.new_window)
-                    popup_tarea.title("Selecciona una opción")
+                    popup_task = tk.Toplevel(self.new_window)
+                    popup_task.title("Selecciona una opción")
 
                     # Define las opciones para el menú desplegable
-                    opciones = ["1 hora", "1:30 horas", "2 horas"]
-                    opcion_seleccionada = tk.StringVar(value=opciones[0])
+                    options = ["1 hora", "1:30 horas", "2 horas"]
+                    opcion_seleccionada = tk.StringVar(value=options[0])
 
                     # Crea una etiqueta y un menú desplegable
-                    label = tk.Label(
-                        popup_tarea, text="Selecciona una opción:")
+                    label_option = tk.Label(
+                        popup_task, text="Selecciona una opción:")
                     option_menu = tk.OptionMenu(
-                        popup_tarea, opcion_seleccionada, *opciones)
+                        popup_task, opcion_seleccionada, *options)
 
                     # Crea un botón para registrar la opción seleccionada
-                    button_register_tarea = tk.Button(
-                        popup_tarea, text="Registrar", command=close_popup, width=15, font=("Helvetica", 11))
+                    button_register_task = tk.Button(
+                        popup_task, text="Registrar", command=close_popup, width=15, font=("Helvetica", 11))
 
                     # Empaqueta los widgets en la ventana emergente
-                    label.pack()
+                    label_option.pack()
                     option_menu.pack()
-                    button_register_tarea.pack()
+                    button_register_task.pack()
                 else:
                     # Esta opción se da si no hay una clase después o entre clases
                     departure_time = None
@@ -331,9 +331,6 @@ class InfoDesign():
             messagebox.showerror(
                 "Error", "Por favor, completa todos los campos")
 
-        # Refresca la tabla cuando se guarda un registro
-        # ? self.show_registers(self.refresh) <--- Por si se llega a utilizar en el futuro
-
     def show_registers(self, body_table):
         """Función mostrar registros"""
 
@@ -342,11 +339,11 @@ class InfoDesign():
         self.tree.delete(*self.tree.get_children())
 
         # Se usa como filtro de fecha actual
-        fecha_actual = datetime.now().strftime("%d/%m/%y")
+        current_date = datetime.now().strftime("%d/%m/%y")
 
         # Seleccionar registros a mostrar y filtrar por fecha
         cursor.execute(
-            "SELECT no, pc, fecha, nombreAlumno, rol, programa, horaEntrada, horaSalida, actividad FROM bitacoraUso WHERE fecha = ?", (fecha_actual,))
+            "SELECT no, pc, fecha, nombreAlumno, rol, programa, horaEntrada, horaSalida, actividad FROM bitacoraUso WHERE fecha = ?", (current_date,))
 
         # Agrega filas al widget tree con los valores obtenidos de la consulta a la base de datos
         for row in cursor.fetchall():
