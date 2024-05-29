@@ -41,7 +41,7 @@ class RegisterDesign:
         self.entry_id = ttk.Entry(frame, width=18, font=("Helvetica", 13))
 
         # Función para verificar si el entry contiene números válidos
-        def validar_entry(search_id, body_table):
+        def validate_entry(search_id, body_table):
             try:
                 float(search_id)
                 return True
@@ -51,7 +51,7 @@ class RegisterDesign:
         def clic_button():
             search_id = self.entry_id.get()  # Obtiene el id del Entry
             # Verifica si el ID ingresado es válido
-            if validar_entry(search_id, body_table):
+            if validate_entry(search_id, body_table):
                 # Abre el panel de información con el ID proporcionado
                 self.open_info_frame(frame, search_id, body_table)
             else:
@@ -129,11 +129,11 @@ class RegisterDesign:
         self.tree.delete(*self.tree.get_children())
 
         # Se usa como filtro de fecha actual
-        fecha_actual = datetime.datetime.now().strftime("%d/%m/%y")
+        current_date = datetime.datetime.now().strftime("%d/%m/%y")
 
         # Seleccionar registros a mostrar y filtrar por fecha
         cursor.execute(
-            "SELECT no, pc, fecha, nombreAlumno, rol, programa, horaEntrada, horaSalida, actividad FROM bitacoraUso WHERE fecha = ?", (fecha_actual,))
+            "SELECT no, pc, fecha, nombreAlumno, rol, programa, horaEntrada, horaSalida, actividad FROM bitacoraUso WHERE fecha = ?", (current_date,))
 
         # Agrega filas al widget tree con los valores obtenidos de la consulta a la base de datos
         for row in cursor.fetchall():
