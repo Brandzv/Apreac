@@ -1,4 +1,8 @@
-"""Se crea y configura la ventana principal"""
+"""
+@Author: Brandzv
+Fecha: 29/05/24
+Descripción: Modulo que crea y configura la ventana principal
+"""
 
 import tkinter as tk
 from tkinter import font
@@ -30,8 +34,8 @@ class MainDesign():
     def leftbar_menu(self):
         """Función de configuración gráfica de la barra lateral"""
 
-        ancho_menu = 17
-        alto_menu = 2
+        width_menu = 17
+        height_menu = 2
         font_awesome = font.Font(family='FontAwesome', size=15)
 
         self.button_registro = tk.Button(self.leftbar)
@@ -46,13 +50,13 @@ class MainDesign():
 
         for text, icon, button, comando in button_content:
             self.menu_button_config(
-                button, text, icon, font_awesome, ancho_menu, alto_menu, comando)
+                button, text, icon, font_awesome, width_menu, height_menu, comando)
 
-    def menu_button_config(self, button, text, icon, font_awesome, ancho_menu, alto_menu, comando):
+    def menu_button_config(self, button, text, icon, font_awesome, width_menu, height_menu, comando):
         """Función de configuración de los botones en la barra lateral"""
 
         button.config(text=f"{icon} {text}", anchor="w", font=font_awesome, bd=0, bg=LEFTBAR_COLOR,
-                      fg=TEXT_COLOR, width=ancho_menu, height=alto_menu, command=comando)
+                      fg=TEXT_COLOR, width=width_menu, height=height_menu, command=comando)
         button.pack(side=tk.TOP)
         self.bind_hover_events(button)
 
