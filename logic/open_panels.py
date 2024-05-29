@@ -1,4 +1,8 @@
-"""Modulo de conexión para abrir paneles de la ventana"""
+"""
+@Author: Brandzv
+Fecha: 29/05/24
+Descripción: Modulo de conexión para abrir paneles de la ventana
+"""
 
 from logic.registro_design import RegisterDesign
 from logic.ctc_design import CtcDesign
