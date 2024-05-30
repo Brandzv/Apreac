@@ -1,4 +1,8 @@
-"""Login del sistema de acceso"""
+"""
+@Author: Brandzv
+Fecha: 29/05/24
+Descripción: Login del sistema de acceso
+"""
 
 import tkinter as tk
 from tkinter import messagebox
@@ -8,7 +12,7 @@ from conexion import cursor
 
 
 class Login(tk.Tk):
-    """Clase login"""
+    """Clase donde se estructura la ventana login"""
 
     def __init__(self):
         super().__init__()
