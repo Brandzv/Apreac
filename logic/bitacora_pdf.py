@@ -32,8 +32,13 @@ class BitacoraPDF:
             title_style.fontSize = 24
             title_style.leftIndent = 130
             title_style.leading = 30
+            # Busca el texto CTC en la bd y el dato que coincida
+            # con el texto se guarda en la variable ctc
+            cursor.execute(
+                "SELECT usuario FROM usuarios WHERE usuario LIKE '%CTC%'")
+            ctc = cursor.fetchone()
             # Titulo de la Bitacora
-            title = "Bitácora de uso CTC1"
+            title = f"Bitácora de uso {ctc[0]}"
             p = Paragraph(title, title_style)
 
             # Se crea el encabezado del PDF con Logo y Titulo de la bitacora de uso
