@@ -82,15 +82,15 @@ class BitacoraPDF:
                 "SELECT no, pc, fecha, nombreAlumno, rol, programa, horaEntrada, horaSalida, actividad FROM bitacoraUso WHERE fecha = ?", (current_date,))
 
             # Lista de numeros del 1 al 20 para la columna "No."
-            numeros = list(range(1, 21))
+            numbers = list(range(1, 21))
             # Lista "story" vacía
             story = []
 
             # Obtener los datos de la base de datos y agregarlos a la lista de filas
-            for fila in bitacora_uso.fetchall():
+            for row in bitacora_uso.fetchall():
                 # Se selecciona la fila 3 y 5 por que son las que pueden ser textos largos
-                nombre_usuario = fila[3]
-                programa = fila[5]
+                nombre_usuario = row[3]
+                programa = row[5]
 
                 # Divide el texto en líneas de máximo 30 caracteres
                 # para que se pueda adaptar a las celdas
@@ -102,15 +102,15 @@ class BitacoraPDF:
 
                 # Convierte la tupla a una lista para poder formatear los textos
                 # antes de imprimirlos en la tabla
-                fila_data = list(fila)
-                fila_data[3] = "\n".join(text_nombre_usuario)
-                fila_data[5] = "\n".join(text_programa)
+                row_data = list(row)
+                row_data[3] = "\n".join(text_nombre_usuario)
+                row_data[5] = "\n".join(text_programa)
 
                 # Se usa para imprimir los numero del 1 al 20 en la columna "No."
-                fila_data[0] = numeros[0]
-                numeros.append(numeros.pop(0))
+                row_data[0] = numbers[0]
+                numbers.append(numbers.pop(0))
                 # Agregar la fila modificada a la lista de datos
-                data.append(fila_data)
+                data.append(row_data)
 
                 # Si llega la tabla a 20 filas crea una pagina nueva
                 if len(data) == 21:
