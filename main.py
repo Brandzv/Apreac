@@ -1,10 +1,12 @@
-"""Código principal donde se ejecuta todo"""
+"""
+@Author: Brandzv
+Fecha: 09/05/24
+Descripción: Modulo de ejecución del sistema de acceso
+"""
 
-# from logic.main_design import MainDesign
 from logic.login_design import Login
 
 
-# root = MainDesign()
 root = Login()
 
 root.mainloop()
