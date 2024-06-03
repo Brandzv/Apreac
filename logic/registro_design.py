@@ -7,6 +7,7 @@ Descripción: Modulo que muestra el frame para buscar alumno por ID ademas de mo
 import tkinter as tk
 import datetime
 from tkinter import ttk
+import logic.bitacora_pdf
 from logic.registro_info_design import InfoDesign
 from conexion import cursor
 
@@ -60,6 +61,8 @@ class RegisterDesign:
         # Botón para Buscar el alumno del ID ingresado con la función "clic_button"
         self.button_id = tk.Button(
             frame, text="Buscar", command=clic_button, width=10, height=1, font=("Helvetica", 9))
+        self.button_generate_pdf = tk.Button(
+            frame, text="Generar PDF", command=self.create_pdf, width=10, font=("Helvetica", 9))
 
         # Obtiene el ancho actual del frame
         frame_width = frame.winfo_width()
@@ -74,10 +77,13 @@ class RegisterDesign:
         # Agrega padding izquierdo a "label_id" y "entry_id"
         self.label_id.pack(padx=left_padding)
         self.entry_id.pack(padx=left_padding)
+
         # Establece foco en el campo de entrada para que el usuario comience a escribir de inmediato
         self.entry_id.focus_set()
-        # Imprime el botón con padding horizontal y vertical
+
+        # Empaqueta los botones en la misma fila y centrados horizontalmente
         self.button_id.pack(padx=left_padding, pady=5)
+        self.button_generate_pdf.pack(padx=left_padding)
 
     def open_info_frame(self, frame, search_id, body_table):
         """Función que abre frame de información y cierra el panel de registro."""
@@ -138,6 +144,11 @@ class RegisterDesign:
         # Agrega filas al widget tree con los valores obtenidos de la consulta a la base de datos
         for row in cursor.fetchall():
             self.tree.insert("", "end", values=row)
+
+    def create_pdf(self):
+        """Función para generar el PDF"""
+        create_bitacora_pdf = logic.bitacora_pdf.BitacoraPDF()
+        create_bitacora_pdf.generate_bitacora(self)
 
     def clear_panel(self, panel):
         """Función que se encarga de limpiar el contenido del frame"""
