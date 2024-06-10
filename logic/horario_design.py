@@ -14,9 +14,9 @@ class ScheduleDesign():
     """Clase del diseño del panel horario"""
 
     def __init__(self, body):
-        label_report = tk.Label(body, text="Horario",
-                                bg=BODY_COLOR, font=("Helvetica", 16))
-        label_report.pack()
+        label_schedule_text = tk.Label(body, text="Horario",
+                                       bg=BODY_COLOR, font=("Helvetica", 16))
+        label_schedule_text.pack()
 
         self.table_schedule(body)
 
@@ -43,13 +43,18 @@ class ScheduleDesign():
         self.tree.column("#5", width=50, anchor="center")
         self.tree.column("#6", width=50, anchor="center")
 
+        # Ejecuta la consulta SQL para obtener los datos de la tabla "horarios"
         cursor.execute(
             "SELECT idClase, docente, diaSemana, horaEntrada, horaSalida FROM horarios")
-        datos_horarios = cursor.fetchall()
+        # Obtiene los datos de la consulta
+        schedule_data = cursor.fetchall()
 
         # Llenar la tabla con los datos
-        for clase in datos_horarios:
+        for clase in schedule_data:
+            # Desempaqueta los valores de cada clase
             idClase, docente, dia_semana, hora_entrada, hora_salida = clase
+            # Inserta una fila en la tabla con el rango de horas y el nombre del docente para
+            # el día de la semana correspondiente
             self.tree.insert("", "end", values=(
                 f"{hora_entrada} - {hora_salida}", *[docente if dia_semana == i else "-" for i in range(5)]))
 
