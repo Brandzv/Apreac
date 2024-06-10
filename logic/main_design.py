@@ -39,13 +39,13 @@ class MainDesign():
         font_awesome = font.Font(family='FontAwesome', size=15)
 
         self.button_registro = tk.Button(self.leftbar)
-        self.button_ctc = tk.Button(self.leftbar)
+        self.button_reports = tk.Button(self.leftbar)
         self.button_horario = tk.Button(self.leftbar)
 
         button_content = {
-            ("Registro", "   \uf02a", self.button_registro, self.open_register_panel),
-            ("CTC", "   \uf390", self.button_ctc, self.open_ctc_panel),
-            ("Horario", "   \uf15c", self.button_horario, self.open_schedule_panel)
+            ("Registro", "   \uf2c2", self.button_registro, self.open_register_panel),
+            ("Reportes", "   \uf1c1", self.button_reports, self.open_reports_panel),
+            ("Horario", "   \uf784", self.button_horario, self.open_schedule_panel)
         }
 
         for text, icon, button, comando in button_content:
@@ -83,12 +83,12 @@ class MainDesign():
         show_register_main = logic.open_panels.OpenPanel(self.body)
         show_register_main.show_register_panel()
 
-    def open_ctc_panel(self):
+    def open_reports_panel(self):
         """Función que abre panel de ctc y limpia los paneles y contenidos de la ventana."""
 
         self.clear_panel(self.body)
-        show_ctc_main = logic.open_panels.OpenPanel(self.body)
-        show_ctc_main.show_ctc_panel()
+        show_reports_main = logic.open_panels.OpenPanel(self.body)
+        show_reports_main.show_reports_panel()
 
     def open_schedule_panel(self):
         """Función que abre panel de horario y limpia los paneles y contenidos de la ventana."""

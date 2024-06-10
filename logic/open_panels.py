@@ -5,7 +5,7 @@ Descripción: Modulo de conexión para abrir paneles de la ventana
 """
 
 from logic.registro_design import RegisterDesign
-from logic.ctc_design import CtcDesign
+from logic.reportes_design import ReportsDesign
 from logic.horario_design import ScheduleDesign
 
 
@@ -20,10 +20,10 @@ class OpenPanel:
 
         RegisterDesign(self.body)
 
-    def show_ctc_panel(self):
+    def show_reports_panel(self):
         """Función que abre panel de ctc y limpia los paneles y contenidos de la ventana."""
 
-        CtcDesign(self.body)
+        ReportsDesign(self.body)
 
     def show_schedule_panel(self):
         """Función que abre panel de horario y limpia los paneles y contenidos de la ventana."""
