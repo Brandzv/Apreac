@@ -1,7 +1,13 @@
-"""Modulo de diseño del panel horario"""
+"""
+@Author: Brandzv
+Fecha: 02/06/24
+Descripción: Modulo de diseño del panel horario
+"""
+
 import tkinter as tk
-# from tkinter import ttk
+from tkinter import ttk
 from config import BODY_COLOR
+from conexion import cursor
 
 
 class ScheduleDesign():
@@ -11,3 +17,41 @@ class ScheduleDesign():
         label_report = tk.Label(body, text="Horario",
                                 bg=BODY_COLOR, font=("Helvetica", 16))
         label_report.pack()
+
+        self.table_schedule(body)
+
+    def table_schedule(self, body):
+        """Función para crear la tabla de horario"""
+
+        # Configura el widget tree con las columnas y encabezados siguientes
+        self.tree = ttk.Treeview(body, columns=(
+            "horas", "lunes", "martes", "miercoles", "jueves", "viernes"), show="headings")
+
+        # Define cómo se mostrará el encabezado de las columnas en el widget tree
+        self.tree.heading("#1", text=" ", anchor="center")
+        self.tree.heading("#2", text="Lunes", anchor="center")
+        self.tree.heading("#3", text="Martes", anchor="center")
+        self.tree.heading("#4", text="Miércoles", anchor="center")
+        self.tree.heading("#5", text="Jueves", anchor="center")
+        self.tree.heading("#6", text="Viernes", anchor="center")
+
+        # Configura ancho y alineación de las columnas
+        self.tree.column("#1", width=30, anchor="center")
+        self.tree.column("#2", width=50, anchor="center")
+        self.tree.column("#3", width=50, anchor="center")
+        self.tree.column("#4", width=50, anchor="center")
+        self.tree.column("#5", width=50, anchor="center")
+        self.tree.column("#6", width=50, anchor="center")
+
+        cursor.execute(
+            "SELECT idClase, docente, diaSemana, horaEntrada, horaSalida FROM horarios")
+        datos_horarios = cursor.fetchall()
+
+        # Llenar la tabla con los datos
+        for clase in datos_horarios:
+            idClase, docente, dia_semana, hora_entrada, hora_salida = clase
+            self.tree.insert("", "end", values=(
+                f"{hora_entrada} - {hora_salida}", *[docente if dia_semana == i else "-" for i in range(5)]))
+
+        # Configura la posición de tree y el como se expande
+        self.tree.pack(fill="both", expand=True, pady=5, padx=5)
