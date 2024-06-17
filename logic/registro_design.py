@@ -147,8 +147,12 @@ class RegisterDesign:
 
     def create_pdf(self):
         """Función para generar el PDF"""
+
+        time = datetime.datetime.now()
+        date = time.strftime("%d/%m/%y")
+
         create_bitacora_pdf = logic.bitacora_pdf.BitacoraPDF()
-        create_bitacora_pdf.generate_bitacora(self)
+        create_bitacora_pdf.generate_bitacora(self, date)
 
     def clear_panel(self, panel):
         """Función que se encarga de limpiar el contenido del frame"""
