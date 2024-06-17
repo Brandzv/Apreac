@@ -13,7 +13,7 @@ from conexion import cursor
 class BitacoraPDF:
     """Clase para generar PDF de bitacora de uso"""
 
-    def generate_bitacora(self, crear_pdf):
+    def generate_bitacora(self, crear_pdf, date):
         """Función para generar el PDF"""
 
         if crear_pdf:
@@ -75,11 +75,10 @@ class BitacoraPDF:
             # Es la lista de los encabezados de la tabla
             data = [headers]
 
-            # Se usa como filtro de fecha actual
-            current_date = time.strftime("%d/%m/%y")
             # Ejecuta una consulta para obtener los datos que se imprimirán en la tabla
+            # date se usa de filtro de fecha
             bitacora_uso = cursor.execute(
-                "SELECT no, pc, fecha, nombreAlumno, rol, programa, horaEntrada, horaSalida, actividad FROM bitacoraUso WHERE fecha = ?", (current_date,))
+                "SELECT no, pc, fecha, nombreAlumno, rol, programa, horaEntrada, horaSalida, actividad FROM bitacoraUso WHERE fecha = ?", (date,))
 
             # Lista de numeros del 1 al 20 para la columna "No."
             numbers = list(range(1, 21))
