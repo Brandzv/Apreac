@@ -6,7 +6,7 @@ Descripción: Modulo que muestra el frame para buscar alumno por ID ademas de mo
 
 import tkinter as tk
 import datetime
-from tkinter import ttk
+from tkinter import ttk, messagebox
 import logic.bitacora_pdf
 from logic.registro_info_design import InfoDesign
 from conexion import cursor
@@ -56,7 +56,8 @@ class RegisterDesign:
                 # Abre el panel de información con el ID proporcionado
                 self.open_info_frame(frame, search_id, body_table)
             else:
-                print("Por favor, ingresa números válidos en el Entry.")
+                messagebox.showerror(
+                    "Error", "Ingrese un ID válido")
 
         # Botón para Buscar el alumno del ID ingresado con la función "clic_button"
         self.button_id = tk.Button(
