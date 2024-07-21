@@ -13,9 +13,10 @@ import logic.open_panels
 class MainDesign():
     """Esta clase contiene las funciones de creación y configuración de la ventana"""
 
-    def __init__(self, body):
+    def __init__(self, body, user):
         super().__init__()
         self.body_main = body
+        self.user_key = user
 
         self.panel()
         self.leftbar_menu()
@@ -42,10 +43,15 @@ class MainDesign():
         self.button_reports = tk.Button(self.leftbar)
         self.button_horario = tk.Button(self.leftbar)
 
+        if self.user_key == "admin" or self.user_key == "Admin":
+            self.button_admin = tk.Button(self.leftbar)
+            self.menu_button_config(
+                self.button_admin, "Agregar", " \uf044", font_awesome, width_menu, height_menu, self.open_add_panel)
+
         button_content = {
-            ("Registro", "   \uf2c2", self.button_registro, self.open_register_panel),
-            ("Reportes", "   \uf1c1", self.button_reports, self.open_reports_panel),
-            ("Horario", "   \uf784", self.button_horario, self.open_schedule_panel)
+            ("Registro", " \uf2c2", self.button_registro, self.open_register_panel),
+            ("Reportes", " \uf1c1", self.button_reports, self.open_reports_panel),
+            ("Horario", " \uf784", self.button_horario, self.open_schedule_panel)
         }
 
         for text, icon, button, comando in button_content:
@@ -96,6 +102,13 @@ class MainDesign():
         self.clear_panel(self.body)
         show_schedule_main = logic.open_panels.OpenPanel(self.body)
         show_schedule_main.show_schedule_panel()
+
+    def open_add_panel(self):
+        """Función que abre panel de horario y limpia los paneles y contenidos de la ventana."""
+
+        self.clear_panel(self.body)
+        show_schedule_main = logic.open_panels.OpenPanel(self.body)
+        show_schedule_main.show_add_panel()
 
     def clear_panel(self, panel):
         """Función que se encarga de limpiar el contenido del panel"""

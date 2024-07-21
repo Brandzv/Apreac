@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 from tkinter import ttk, messagebox
 import logic.open_panels
 import logic.bitacora_pdf
+from utility import util_window as centrar_ventana
 from conexion import cursor, conecta
 
 
@@ -301,6 +302,10 @@ class InfoDesign():
                     # Crea una ventana emergente
                     popup_task = tk.Toplevel(self.new_window)
                     popup_task.title("Selecciona una opción")
+                    popup_task.resizable(False, False)
+
+                    w, h = 310, 81
+                    centrar_ventana.centrar_ventana(popup_task, w, h)
 
                     # Define las opciones para el menú desplegable
                     options = ["1 hora", "1:30 horas", "2 horas"]

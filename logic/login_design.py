@@ -97,10 +97,12 @@ class Login(tk.Tk):
                 self.title('Registro de alumnos')
                 body = self
                 self.clear_panel(self)
-                MainDesign(body)
+                MainDesign(body, user)
             else:
-                messagebox.showinfo(
-                    "Información", "Bienvenido al sistema de usuario")
+                self.title('Registro de alumnos')
+                body = self
+                self.clear_panel(self)
+                MainDesign(body, user)
         else:
             messagebox.showerror("Error", "Usuario o contraseña incorrectos")
             self.entry_user.delete(0, tk.END)
