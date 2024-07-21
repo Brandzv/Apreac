@@ -51,7 +51,7 @@ class AddDataDesign():
         text_users = tk.Label(option_frame, text='Permite la inscripción de nuevos usuarios para acceder al sistema en la tabla "Usuarios", asegurando que los datos sean almacenados correctamente.',
                               font=("Helvetica", 11), wraplength=300, anchor="w", justify="left")  # Ajusta el wraplength y alinea a la izquierda
         button_users = tk.Button(option_frame, text="Agregar Usuario",
-                                 font=("Helvetica", 11), command=self.open_form_users)
+                                 command=self.open_form_users, font=("Helvetica", 11))
 
         title_users.grid(row=0, column=0, padx=10, pady=10, sticky="w")
         text_users.grid(row=1, column=0, padx=10, pady=0,
@@ -65,7 +65,7 @@ class AddDataDesign():
         text_students = tk.Label(option_frame, text='Permite la inscripción de nuevos estudiantes en la tabla "Estudiantes" de la base de datos, asegurando que los datos sean almacenados correctamente.',
                                  font=("Helvetica", 11), wraplength=300, anchor="w", justify="left")  # Ajusta el wraplength y alinea a la izquierda
         button_students = tk.Button(option_frame, text="Agregar Estudiante",
-                                    font=("Helvetica", 11), command=self.open_form_students)
+                                    command=self.open_form_students, font=("Helvetica", 11))
 
         title_students.grid(row=3, column=0, padx=10, pady=10, sticky="w")
         text_students.grid(row=4, column=0, padx=10, pady=0,
@@ -79,7 +79,7 @@ class AddDataDesign():
         text_courses = tk.Label(option_frame, text='Agrega nuevos cursos al horario en la tabla "Cursos" de la base de datos, garantizando una correcta actualización y registro de la información.',
                                 font=("Helvetica", 11), wraplength=300, anchor="w", justify="left")  # Ajusta el wraplength y alinea a la izquierda
         button_courses = tk.Button(option_frame, text="Agregar Curso",
-                                   font=("Helvetica", 11), command=self.open_form_courses)
+                                   command=self.open_form_courses, font=("Helvetica", 11))
 
         title_courses.grid(row=6, column=0, padx=10, pady=10, sticky="w")
         text_courses.grid(row=7, column=0, padx=10, pady=0,

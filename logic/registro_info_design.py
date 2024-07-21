@@ -319,7 +319,7 @@ class InfoDesign():
 
                     # Crea un botón para registrar la opción seleccionada
                     button_register_task = tk.Button(
-                        popup_task, text="Registrar", command=close_popup, width=15, font=("Helvetica", 11))
+                        popup_task, text="Registrar", command=close_popup, width=10, font=("Helvetica", 12))
 
                     # Empaqueta los widgets en la ventana emergente
                     label_option.pack()

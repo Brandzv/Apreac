@@ -61,9 +61,9 @@ class RegisterDesign:
 
         # Botón para Buscar el alumno del ID ingresado con la función "clic_button"
         self.button_id = tk.Button(
-            frame, text="Buscar", command=clic_button, width=10, height=1, font=("Helvetica", 9))
+            frame, text="Buscar", command=clic_button, width=10, height=1, font=("Helvetica", 11))
         self.button_generate_pdf = tk.Button(
-            frame, text="Generar PDF", command=self.create_pdf, width=10, font=("Helvetica", 9))
+            frame, text="Generar PDF", command=self.create_pdf, width=10, font=("Helvetica", 11))
 
         # Obtiene el ancho actual del frame
         frame_width = frame.winfo_width()

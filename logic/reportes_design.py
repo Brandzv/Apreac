@@ -46,7 +46,7 @@ class ReportsDesign():
 
         # botón que ejecuta la función 'create_pdf' al ser presionado
         self.button_generate_pdf = tk.Button(
-            report_frame, text="Generar PDF", command=self.create_pdf, width=10, font=("Helvetica", 13))
+            report_frame, text="Generar PDF", command=self.create_pdf, width=10, font=("Helvetica", 11))
 
         # Imprime los widget en el frame
         lbl_date.pack(anchor="center", pady=10)
@@ -59,7 +59,7 @@ class ReportsDesign():
         # Crea una nueva ventana como una ventana de nivel superior
         self.date_window = tk.Toplevel()
         # Establecer las dimensiones de la ventana
-        w, h = 300, 270
+        w, h = 300, 260
         self.date_window.geometry(f"{w}x{h}+0+0")
         # Centrar la ventana 'date_window' en la pantalla
         centrar_ventana.centrar_ventana(self.date_window, w, h)
@@ -77,7 +77,7 @@ class ReportsDesign():
             self.date_window, date_pattern="dd/mm/yy", font=("Helvetica", 13))
 
         button_submit = tk.Button(
-            self.date_window, text="Seleccionar", command=self.get_date, font=("Helvetica", 13))
+            self.date_window, text="Seleccionar", command=self.get_date, font=("Helvetica", 11))
 
         self.set_calendar.pack()
         button_submit.pack(anchor="center", pady=5)

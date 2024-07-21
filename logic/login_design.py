@@ -68,7 +68,7 @@ class Login(tk.Tk):
                                        font=("Arial", 13), show="*")
         #
         self.button_login = tk.Button(
-            self.body_login, text="Iniciar sesión", font=("Arial", 13), command=self.access)
+            self.body_login, text="Iniciar sesión", command=self.access, font=("Helvetica", 13))
 
         self.label_user.grid(row=0, column=0, padx=5, pady=10, sticky="w")
         #
