@@ -2,6 +2,7 @@
 Fecha: 20/07/24
 Descripción: Modulo del formulario de usuarios con CRUD 
 """
+
 import tkinter as tk
 from tkinter import ttk, messagebox
 import random
@@ -169,14 +170,15 @@ class FormUser():
         user = self.show_user.get()
         password = self.show_password.get()
 
-        # Verificar si los campos no están vacíos
         if user and password:
+            # Verificar si los campos no están vacíos
             cursor.execute(
                 "INSERT INTO usuarios (usuario, contraseña) VALUES (?, ?)",
                 (user, password))
             conecta.commit()
             self.show_users()
         else:
+            # Si los campos están vacíos, mostrar mensaje de advertencia
             messagebox.showwarning(
                 "Advertencia", "Por favor, complete todos los campos.")
 
@@ -213,5 +215,6 @@ class FormUser():
     def clear_panel(self, panel):
         """Función que se encarga de limpiar el contenido del frame"""
 
+        # Destruir todos los widgets hijos del panel
         for widget in panel.winfo_children():
             widget.destroy()

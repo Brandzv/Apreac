@@ -1,8 +1,8 @@
 """
-@Author: Brandzv
 Fecha: 16/06/24
 Descripción: Modulo que crea funciones para poder crear pdf con datos de una fecha no actual
 """
+
 import tkinter as tk
 from tkinter import messagebox, END
 from tkcalendar import Calendar

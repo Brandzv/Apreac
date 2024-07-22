@@ -1,8 +1,8 @@
 """
-@Author: Brandzv
 Fecha: 08/05/24
 Descripción: Modulo para generar un PDF de la Bitacora de uso con los registros del dia actual
 """
+
 import datetime
 from reportlab.lib.pagesizes import letter, landscape
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Image, PageBreak

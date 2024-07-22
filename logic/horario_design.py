@@ -1,5 +1,4 @@
 """
-@Author: Brandzv
 Fecha: 02/06/24
 Descripción: Modulo de diseño del panel horario
 """

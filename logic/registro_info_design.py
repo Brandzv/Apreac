@@ -2,6 +2,7 @@
 Fecha: 09/05/24
 Descripción: Modulo que muestra el panel registro de información de los alumnos
 """
+
 import tkinter as tk
 import datetime
 from datetime import datetime, timedelta
@@ -375,5 +376,6 @@ class InfoDesign():
     def clear_panel(self, panel):
         """Función que se encarga de limpiar el contenido del frame"""
 
+        # Destruir todos los widgets hijos del panel
         for widget in panel.winfo_children():
             widget.destroy()
