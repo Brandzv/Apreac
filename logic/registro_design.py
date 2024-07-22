@@ -1,5 +1,4 @@
 """
-@Author: Brandzv
 Fecha: 09/05/24
 Descripción: Modulo que muestra el frame para buscar alumno por ID ademas de mostrar tabla de registros
 """
@@ -101,7 +100,7 @@ class RegisterDesign:
 
         # Configura el widget tree con las columnas y encabezados siguientes
         self.tree = ttk.Treeview(body_table, columns=(
-            "numero_registro", "numero_pc", "fecha", "nombre_alumno", "rol", "programa", "hr_entrada", "hr_salida", "actividad"), show="headings")
+            "#1", "#2", "#3", "#4", "#5", "#6", "#7", "#8", "#9"), show="headings")
 
         # Define cómo se mostrará el encabezado de las columnas en el widget tree
         self.tree.heading("#1", text="No.", anchor="center")
@@ -157,5 +156,6 @@ class RegisterDesign:
 
     def clear_panel(self, panel):
         """Función que se encarga de limpiar el contenido del frame"""
+
         for widget in panel.winfo_children():
             widget.destroy()
