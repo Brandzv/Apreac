@@ -179,7 +179,7 @@ class FormUser():
             self.show_users()
         else:
             # Si los campos están vacíos, mostrar mensaje de advertencia
-            messagebox.showwarning(
+            messagebox.showerror(
                 "Advertencia", "Por favor, complete todos los campos.")
 
     def edit_user(self, values):
@@ -187,11 +187,16 @@ class FormUser():
 
         new_user = self.entry_edit_user.get()  # Obtener el usuario actualizado
         new_password = self.edit_password.get()  # Obtener la contraseña actualizada
-        cursor.execute("UPDATE usuarios SET usuario = ?, contraseña = ? WHERE id_usuario = ?",
-                       (new_user, new_password, values[0]))
-        conecta.commit()
-        self.menu_window.destroy()
-        self.show_users()
+
+        if new_user and new_password:
+            cursor.execute("UPDATE usuarios SET usuario = ?, contraseña = ? WHERE id_usuario = ?",
+                           (new_user, new_password, values[0]))
+            conecta.commit()
+            self.menu_window.destroy()
+            self.show_users()
+        else:
+            messagebox.showerror(
+                "Error", "Por favor, complete todos los campos.")
 
     def delete_user(self, id_usuario):
         """Función para eliminar usuarios ya existentes"""
