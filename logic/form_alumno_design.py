@@ -1,6 +1,6 @@
 """
 Fecha: 20/07/24
-Descripción: Modulo del formulario de usuarios con CRUD
+Descripción: Modulo del formulario de alumnos con CRUD
 """
 
 import tkinter as tk
@@ -11,7 +11,7 @@ from conexion import cursor, conecta
 
 
 class FormStudent():
-    """Clase del CRUD de la tabla usuarios"""
+    """Clase del CRUD de la tabla alumnos"""
 
     def __init__(self, body):
         # Variable para limpiar el panel
@@ -102,15 +102,16 @@ class FormStudent():
 
         # Configuración de encabezados del Treeview
         self.tree = ttk.Treeview(body, columns=(
-            "#1", "#2", "#3", "#4", "#5", "#6"), show="headings")
+            "#1", "#2", "#3", "#4", "#5", "#6", "#7"), show="headings")
 
         # Nombre de los encabezados
-        self.tree.heading("#1", text="ID", anchor="center")
-        self.tree.heading("#2", text="Nombre", anchor="center")
-        self.tree.heading("#3", text="Apellido paterno", anchor="center")
-        self.tree.heading("#4", text="Apellido materno", anchor="center")
-        self.tree.heading("#5", text="Programa", anchor="center")
-        self.tree.heading("#6", text="Rol", anchor="center")
+        self.tree.heading("#1", text="No.", anchor="center")
+        self.tree.heading("#2", text="ID", anchor="center")
+        self.tree.heading("#3", text="Nombre", anchor="center")
+        self.tree.heading("#4", text="Apellido paterno", anchor="center")
+        self.tree.heading("#5", text="Apellido materno", anchor="center")
+        self.tree.heading("#6", text="Programa", anchor="center")
+        self.tree.heading("#7", text="Rol", anchor="center")
         # Configuración de columnas
         self.tree.column("#1", width=10, anchor="center")
         self.tree.column("#2", width=50, anchor="center")
@@ -118,6 +119,7 @@ class FormStudent():
         self.tree.column("#4", width=50, anchor="center")
         self.tree.column("#5", width=50, anchor="center")
         self.tree.column("#6", width=50, anchor="center")
+        self.tree.column("#7", width=50, anchor="center")
 
         self.tree.pack(fill="both", expand=True, pady=1, padx=5)
 
@@ -125,12 +127,12 @@ class FormStudent():
         self.tree.bind("<Double-1>", self.on_double_click)
 
     def show_students(self):
-        """Función de mostrar los registros de la tabla usuarios"""
+        """Función de mostrar los registros de la tabla alumnos"""
 
         # Limpiar tabla
         self.tree.delete(*self.tree.get_children())
 
-        # Consulta SQL para obtener los datos de la tabla usuarios
+        # Consulta SQL para obtener los datos de la tabla alumnos
         cursor.execute(
             "SELECT id, idAlumno, nombres, apellidoPaterno, apellidoMaterno, programa, rol FROM alumnos")
         # Insertar los datos en el Treeview
@@ -244,7 +246,7 @@ class FormStudent():
         button_delete.pack(side="right", padx=10)
 
     def save_form(self):
-        """Función para obtener y guardar nuevos usuarios"""
+        """Función para obtener y guardar nuevos alumnos"""
 
         # Obtener los valores de los campos de entrada
         student_id = self.show_id.get()
@@ -266,7 +268,7 @@ class FormStudent():
                 "Advertencia", "Por favor, complete todos los campos.")
 
     def edit_student(self):
-        """Función para editar los usuarios ya existentes"""
+        """Función para editar los alumnos ya existentes"""
 
         new_student_id = self.entry_edit_id.get()
         new_student_name = self.entry_edit_name.get()
@@ -289,7 +291,7 @@ class FormStudent():
                 "Advertencia", "Por favor, complete todos los campos.")
 
     def delete_student(self):
-        """Función para eliminar usuarios ya existentes"""
+        """Función para eliminar alumnos ya existentes"""
 
         cursor.execute(
             "DELETE FROM alumnos WHERE id = ?", (self.selected_student_id,))
