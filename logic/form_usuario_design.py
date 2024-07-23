@@ -75,7 +75,7 @@ class FormUser():
             "#1", "#2", "#3"), show="headings")
 
         # Nombre de los encabezados
-        self.tree.heading("#1", text="ID", anchor="center")
+        self.tree.heading("#1", text="No.", anchor="center")
         self.tree.heading("#2", text="Usuario", anchor="center")
         self.tree.heading("#3", text="Contraseña", anchor="center")
         # Configuración de columnas
