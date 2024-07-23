@@ -256,16 +256,21 @@ class FormStudent():
         career = self.show_career.get()
         role = self.show_role.get()
 
-        if student_id and student_name and father_surname and mother_surname and career and role:
-            # Verificar si los campos no están vacíos
-            cursor.execute(
-                "INSERT INTO alumnos (idAlumno, nombres, apellidoPaterno, apellidoMaterno, programa, rol) VALUES (?, ?, ?, ?, ?, ?)", (student_id, student_name, father_surname, mother_surname, career, role))
-            conecta.commit()
-            self.show_students()
+        if student_id.isdigit():
+            if student_name.isalpha() and father_surname.isalpha() and mother_surname.isalpha() and career and role.isalpha():
+                # Verificar si los campos no están vacíos
+                cursor.execute(
+                    "INSERT INTO alumnos (idAlumno, nombres, apellidoPaterno, apellidoMaterno, programa, rol) VALUES (?, ?, ?, ?, ?, ?)", (student_id, student_name, father_surname, mother_surname, career, role))
+                conecta.commit()
+                self.show_students()
+            else:
+                # Si los campos están vacíos, mostrar mensaje de advertencia
+                messagebox.showwarning(
+                    "Advertencia", "Por favor, complete los campos correctamente.")
         else:
-            # Si los campos están vacíos, mostrar mensaje de advertencia
+            # Mostrar mensaje de advertencia si el ID no es un número
             messagebox.showwarning(
-                "Advertencia", "Por favor, complete todos los campos.")
+                "Advertencia", "El campo ID debe ser un valor numérico.")
 
     def edit_student(self):
         """Función para editar los alumnos ya existentes"""
@@ -277,18 +282,23 @@ class FormStudent():
         new_career = self.entry_edit_career.get()
         new_role = self.entry_edit_role.get()
 
-        if new_student_id and new_student_name and new_father_surname and new_mother_surname and new_career and new_role:
-            # Verificar si los campos no están vacíos
-            cursor.execute("UPDATE alumnos SET idAlumno = ?, nombres = ?, apellidoPaterno = ?, apellidoMaterno = ?, programa = ?, rol = ? WHERE id = ?",
-                           (new_student_id, new_student_name, new_father_surname,
-                            new_mother_surname, new_career, new_role, self.selected_student_id))
-            conecta.commit()
-            self.menu_window.destroy()
-            self.show_students()
+        if new_student_id.isdigit():
+            if new_student_name.isalpha() and new_father_surname.isalpha() and new_mother_surname.isalpha() and new_career and new_role.isalpha():
+                # Verificar si los campos no están vacíos
+                cursor.execute("UPDATE alumnos SET idAlumno = ?, nombres = ?, apellidoPaterno = ?, apellidoMaterno = ?, programa = ?, rol = ? WHERE id = ?",
+                               (new_student_id, new_student_name, new_father_surname,
+                                new_mother_surname, new_career, new_role, self.selected_student_id))
+                conecta.commit()
+                self.menu_window.destroy()
+                self.show_students()
+            else:
+                # Si los campos están vacíos, mostrar mensaje de advertencia
+                messagebox.showwarning(
+                    "Advertencia", "Por favor, complete los campos correctamente.")
         else:
-            # Si los campos están vacíos, mostrar mensaje de advertencia
+            # Mostrar mensaje de advertencia si el ID no es un número
             messagebox.showwarning(
-                "Advertencia", "Por favor, complete todos los campos.")
+                "Advertencia", "El campo ID debe ser un valor numérico.")
 
     def delete_student(self):
         """Función para eliminar alumnos ya existentes"""
