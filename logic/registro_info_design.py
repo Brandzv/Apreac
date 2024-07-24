@@ -26,7 +26,7 @@ class InfoDesign():
 
         # Se selecciona los datos necesarios para mostrar en los input
         cursor.execute(
-            f"SELECT id, nombres, apellidoPaterno, apellidoMaterno, programa, rol FROM alumnos WHERE ID = {search_id}")
+            f"SELECT idAlumno, nombres, apellidoPaterno, apellidoMaterno, programa, rol FROM alumnos WHERE idAlumno = {search_id}")
         student = cursor.fetchone()
 
         # Guarda los cambios

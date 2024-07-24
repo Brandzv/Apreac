@@ -44,14 +44,14 @@ class ScheduleDesign():
 
         # Ejecuta la consulta SQL para obtener los datos de la tabla "horarios"
         cursor.execute(
-            "SELECT idClase, docente, diaSemana, horaEntrada, horaSalida FROM horarios")
+            "SELECT crn, docente, diaSemana, horaEntrada, horaSalida FROM horarios")
         # Obtiene los datos de la consulta
         schedule_data = cursor.fetchall()
 
         # Llenar la tabla con los datos
         for clase in schedule_data:
             # Desempaqueta los valores de cada clase
-            idClase, docente, dia_semana, hora_entrada, hora_salida = clase
+            crn, docente, dia_semana, hora_entrada, hora_salida = clase
             # Inserta una fila en la tabla con el rango de horas y el nombre del docente para
             # el día de la semana correspondiente
             self.tree.insert("", "end", values=(
