@@ -201,11 +201,16 @@ class FormUser():
     def delete_user(self, id_usuario):
         """Función para eliminar usuarios ya existentes"""
 
-        cursor.execute(
-            "DELETE FROM usuarios WHERE id_usuario = ?", (id_usuario,))
-        conecta.commit()
-        self.menu_window.destroy()
-        self.show_users()
+        # Mostrar mensaje de confirmación
+        result = messagebox.askyesno(
+            "Confirmación", "¿Está seguro de que desea eliminar este registro?")
+
+        if result:
+            cursor.execute(
+                "DELETE FROM usuarios WHERE id_usuario = ?", (id_usuario,))
+            conecta.commit()
+            self.menu_window.destroy()
+            self.show_users()
 
     def back(self):
         """Función para volver al panel anterior"""

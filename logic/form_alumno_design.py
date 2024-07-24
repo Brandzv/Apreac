@@ -257,7 +257,7 @@ class FormStudent():
         role = self.show_role.get()
 
         if student_id.isdigit():
-            if student_name.isalpha() and father_surname.isalpha() and mother_surname.isalpha() and career and role.isalpha():
+            if self.isAlpha(student_name) and self.isAlpha(father_surname) and self.isAlpha(mother_surname) and career and role.isalpha():
                 # Verificar si los campos no están vacíos
                 cursor.execute(
                     "INSERT INTO alumnos (idAlumno, nombres, apellidoPaterno, apellidoMaterno, programa, rol) VALUES (?, ?, ?, ?, ?, ?)", (student_id, student_name, father_surname, mother_surname, career, role))
@@ -283,7 +283,7 @@ class FormStudent():
         new_role = self.entry_edit_role.get()
 
         if new_student_id.isdigit():
-            if new_student_name.isalpha() and new_father_surname.isalpha() and new_mother_surname.isalpha() and new_career and new_role.isalpha():
+            if self.isAlpha(new_student_name) and self.isAlpha(new_father_surname) and self.isAlpha(new_mother_surname) and new_career and new_role.isalpha():
                 # Verificar si los campos no están vacíos
                 cursor.execute("UPDATE alumnos SET idAlumno = ?, nombres = ?, apellidoPaterno = ?, apellidoMaterno = ?, programa = ?, rol = ? WHERE id = ?",
                                (new_student_id, new_student_name, new_father_surname,
@@ -303,11 +303,16 @@ class FormStudent():
     def delete_student(self):
         """Función para eliminar alumnos ya existentes"""
 
-        cursor.execute(
-            "DELETE FROM alumnos WHERE id = ?", (self.selected_student_id,))
-        conecta.commit()
-        self.menu_window.destroy()
-        self.show_students()
+        # Mostrar mensaje de confirmación
+        result = messagebox.askyesno(
+            "Confirmación", "¿Está seguro de que desea eliminar este registro?")
+
+        if result:
+            cursor.execute(
+                "DELETE FROM alumnos WHERE id = ?", (self.selected_student_id,))
+            conecta.commit()
+            self.menu_window.destroy()
+            self.show_students()
 
     def back(self):
         """Función para volver al panel anterior"""
@@ -318,6 +323,9 @@ class FormStudent():
         # Abre el panel "AddDataDesign" en frame body
         show_register_design = logic.open_panels.OpenPanel(body)
         show_register_design.show_add_panel()
+
+    def isAlpha(self, s):
+        return all(c.isalpha() or c.isspace() for c in s)
 
     def clear_panel(self, panel):
         """Función que se encarga de limpiar el contenido del frame"""
