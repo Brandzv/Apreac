@@ -7,7 +7,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 import logic.open_panels
 from utility import util_window as centrar_ventana
-from conexion import cursor, conecta
+from conexion import get_cursor
 
 
 # Diccionario para convertir entre números y nombres de días
@@ -22,10 +22,12 @@ class FormCourses():
     """Clase del CRUD de la tabla cursos"""
 
     def __init__(self, body):
+        # Obtener el cursor de la base de datos
+        conecta, cursor = get_cursor()
         # Variable para limpiar el panel
         self.refresh = body
         # LabelFrame que contiene el CRUD
-        schedule_frame = tk.LabelFrame(body, text="Agregar Alumnos",
+        schedule_frame = tk.LabelFrame(body, text="Agregar Clase",
                                        font=("Helvetica", 16, "bold"))
         # Ancho de borde
         schedule_frame.config(bd=2)
@@ -33,11 +35,11 @@ class FormCourses():
         schedule_frame.pack(fill="x", padx=5, pady=2, ipady=5)
 
         # Llamada a la función del diseño del formulario
-        self.form_schedule(schedule_frame)
+        self.form_schedule(schedule_frame, conecta, cursor)
         self.table_schedule(body)
-        self.show_schedule()
+        self.show_schedule(conecta, cursor)
 
-    def form_schedule(self, schedule_frame):
+    def form_schedule(self, schedule_frame, conecta, cursor):
         """Función del diseño del formulario"""
 
         # Ingreso del CRN
@@ -74,7 +76,7 @@ class FormCourses():
         self.button_back = tk.Button(
             schedule_frame, text="Regresar", command=self.back, font=("Helvetica", 11))
         self.button_save = tk.Button(
-            schedule_frame, text="Guardar", command=self.save_form, font=("Helvetica", 11))
+            schedule_frame, text="Guardar", command=lambda: self.save_form(conecta, cursor), font=("Helvetica", 11))
 
         # Configuración de columnas del LabelFrame
         schedule_frame.columnconfigure(2, weight=1)
@@ -129,7 +131,7 @@ class FormCourses():
         # Evento doble click en la tabla
         self.tree.bind("<Double-1>", self.on_double_click)
 
-    def show_schedule(self):
+    def show_schedule(self, conecta, cursor):
         """Función de mostrar los registros de la tabla cursos"""
 
         # Limpiar tabla
@@ -146,17 +148,19 @@ class FormCourses():
     def on_double_click(self, event):
         """Función de doble click en la tabla"""
 
+        # Obtener el cursor de la base de datos
+        conecta, cursor = get_cursor()
         # Obtener el item seleccionado
         item = self.tree.selection()[0]
         values = self.tree.item(item, "values")
-        self.menu_schedule(values)
+        self.menu_schedule(values, conecta, cursor)
 
-    def menu_schedule(self, values):
+    def menu_schedule(self, values, conecta, cursor):
         """Función de diseño del TopLevel para editar y eliminar"""
 
         self.menu_window = tk.Toplevel()
         self.menu_window.title(
-            f"Menú de opciones de {values[1]}")
+            f"Menú de opciones de {values[0]}")
         self.menu_window.resizable(False, False)
 
         # Tamaño de la ventana emergente
@@ -206,9 +210,9 @@ class FormCourses():
 
         # Botones
         self.button_edit_save = tk.Button(
-            self.menu_window, text="Guardar", command=self.edit_schedule, font=("Helvetica", 11))
+            self.menu_window, text="Guardar", command=lambda: self.edit_schedule(conecta, cursor), font=("Helvetica", 11))
         self.button_edit_delete = tk.Button(
-            self.menu_window, text="Eliminar", command=self.delete_schedule, font=("Helvetica", 11))
+            self.menu_window, text="Eliminar", command=lambda: self.delete_schedule(conecta, cursor), font=("Helvetica", 11))
 
         # Configuración de columnas del TopLevel
         self.menu_window.columnconfigure(2, weight=1)
@@ -236,12 +240,12 @@ class FormCourses():
         self.entry_edit_departure_time.grid(
             row=3, column=2, padx=5, pady=5, sticky="ew")
 
-        self.button_edit_delete.grid(
+        self.button_edit_save.grid(
             row=4, column=2, padx=5, pady=5, sticky="e")
-        self.button_edit_save.grid(row=4, column=3,
+        self.button_edit_delete.grid(row=4, column=3,
                                    padx=5, pady=5, sticky="w")
 
-    def save_form(self):
+    def save_form(self, conecta, cursor):
         """Función para obtener y guardar nuevos cursos"""
 
         # Obtener los valores de los campos de entrada
@@ -258,7 +262,7 @@ class FormCourses():
                     "INSERT INTO horarios (crn, docente, diaSemana, horaEntrada, horaSalida) VALUES (?, ?, ?, ?, ?)",
                     (course_crn, course_teacher, DAY_MAPPING[course_day_week], course_entry_time, course_departure_time))
                 conecta.commit()
-                self.show_schedule()
+                self.show_schedule(conecta, cursor)
             else:
                 # Si los campos están vacíos, mostrar mensaje de advertencia
                 messagebox.showwarning(
@@ -268,7 +272,7 @@ class FormCourses():
             messagebox.showwarning(
                 "Advertencia", "El campo CRN debe ser un valor numérico.")
 
-    def edit_schedule(self):
+    def edit_schedule(self, conecta, cursor):
         """Función para editar los cursos ya existentes"""
 
         new_course_crn = self.entry_edit_crn.get()
@@ -285,7 +289,7 @@ class FormCourses():
                                 new_course_entry_time, new_course_departure_time, self.selected_course_id))
                 conecta.commit()
                 self.menu_window.destroy()
-                self.show_schedule()
+                self.show_schedule(conecta, cursor)
             else:
                 # Si los campos están vacíos, mostrar mensaje de advertencia
                 messagebox.showwarning(
@@ -295,7 +299,7 @@ class FormCourses():
             messagebox.showwarning(
                 "Advertencia", "El campo CRN debe ser un valor numérico.")
 
-    def delete_schedule(self):
+    def delete_schedule(self, conecta, cursor):
         """Función para eliminar los cursos existentes"""
 
         # Mostrar mensaje de confirmación
@@ -307,7 +311,7 @@ class FormCourses():
                            (self.selected_course_id,))
             conecta.commit()
             self.menu_window.destroy()
-            self.show_schedule()
+            self.show_schedule(conecta, cursor)
 
     def back(self):
         """Función para volver al panel anterior"""

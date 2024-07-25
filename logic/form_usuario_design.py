@@ -8,13 +8,15 @@ from tkinter import ttk, messagebox
 import random
 import logic.open_panels
 from utility import util_window as centrar_ventana
-from conexion import cursor, conecta
+from conexion import get_cursor
 
 
 class FormUser():
     """Clase del CRUD de la tabla usuarios"""
 
     def __init__(self, body):
+        # Obtener el cursor de la base de datos
+        conecta, cursor = get_cursor()
         # Variable para limpiar el panel
         self.refresh = body
         # LabelFrame que contiene el CRUD
@@ -26,11 +28,11 @@ class FormUser():
         user_frame.pack(fill="x", padx=50, pady=2, ipadx=10, ipady=5)
 
         # Llamada a la función del diseño del formulario
-        self.form_users(user_frame)
-        self.table_users(body)
-        self.show_users()
+        self.form_users(user_frame, conecta, cursor)
+        self.table_users(body, conecta, cursor)
+        self.show_users(conecta, cursor)
 
-    def form_users(self, user_frame):
+    def form_users(self, user_frame, conecta, cursor):
         """Función del diseño del formulario"""
 
         # Ingreso de usuario
@@ -50,7 +52,7 @@ class FormUser():
         self.button_back = tk.Button(
             user_frame, text="Regresar", command=self.back, font=("Helvetica", 11))
         self.button_save = tk.Button(
-            user_frame, text="Guardar", command=self.save_form, font=("Helvetica", 11))
+            user_frame, text="Guardar", command=lambda: self.save_form(conecta, cursor), font=("Helvetica", 11))
 
         # Posicionamiento de los elementos
         user_frame.grid_columnconfigure(0, weight=1)
@@ -67,7 +69,7 @@ class FormUser():
         self.button_back.grid(row=2, column=0, padx=2, pady=2, sticky="w")
         self.button_save.grid(row=2, column=0, columnspan=2, padx=2, pady=2)
 
-    def table_users(self, body):
+    def table_users(self, body, conecta, cursor):
         """Función de diseño del encabezado del Treeview"""
 
         # Configuración de encabezados del Treeview
@@ -86,9 +88,10 @@ class FormUser():
         self.tree.pack(fill="both", expand=True, pady=1, padx=5)
 
         # Evento doble click en la tabla
-        self.tree.bind("<Double-1>", self.on_double_click)
+        self.tree.bind(
+            "<Double-1>", self.on_double_click)
 
-    def show_users(self):
+    def show_users(self, conecta, cursor):
         """Función de mostrar los registros de la tabla usuarios"""
 
         # Limpiar tabla
@@ -104,12 +107,15 @@ class FormUser():
     def on_double_click(self, event):
         """Función de doble click en la tabla"""
 
+        # Obtener el cursor de la base de datos
+        conecta, cursor = get_cursor()
+
         # Obtener el item seleccionado
         item = self.tree.selection()[0]
         values = self.tree.item(item, "values")
-        self.menu_user(values)
+        self.menu_user(values, conecta, cursor)
 
-    def menu_user(self, values):
+    def menu_user(self, values, conecta, cursor):
         """Función de diseño del TopLevel para editar y eliminar"""
 
         self.menu_window = tk.Toplevel()
@@ -145,9 +151,9 @@ class FormUser():
 
         # Botones para editar y eliminar
         button_edit = tk.Button(button_frame, text="Guardar",
-                                command=lambda: self.edit_user(values), font=("Helvetica", 11))
+                                command=lambda: self.edit_user(values, conecta, cursor), font=("Helvetica", 11))
         button_delete = tk.Button(button_frame, text="Eliminar",
-                                  command=lambda: self.delete_user(values[0]), font=("Helvetica", 11))
+                                  command=lambda: self.delete_user(values[0], conecta, cursor), font=("Helvetica", 11))
 
         # Colocar widgets en el grid
         self.label_edit_user.grid(row=0, column=0, padx=5, pady=2, sticky="e")
@@ -163,7 +169,7 @@ class FormUser():
         button_edit.pack(side="left", padx=10)
         button_delete.pack(side="right", padx=10)
 
-    def save_form(self):
+    def save_form(self, conecta, cursor):
         """Función para obtener y guardar nuevos usuarios"""
 
         # Obtener los valores de los campos de entrada
@@ -176,13 +182,13 @@ class FormUser():
                 "INSERT INTO usuarios (usuario, contraseña) VALUES (?, ?)",
                 (user, password))
             conecta.commit()
-            self.show_users()
+            self.show_users(conecta, cursor)
         else:
             # Si los campos están vacíos, mostrar mensaje de advertencia
             messagebox.showerror(
                 "Advertencia", "Por favor, complete todos los campos.")
 
-    def edit_user(self, values):
+    def edit_user(self, values, conecta, cursor):
         """Función para editar los usuarios ya existentes"""
 
         new_user = self.entry_edit_user.get()  # Obtener el usuario actualizado
@@ -193,12 +199,12 @@ class FormUser():
                            (new_user, new_password, values[0]))
             conecta.commit()
             self.menu_window.destroy()
-            self.show_users()
+            self.show_users(conecta, cursor)
         else:
             messagebox.showerror(
                 "Error", "Por favor, complete todos los campos.")
 
-    def delete_user(self, id_usuario):
+    def delete_user(self, id_usuario, conecta, cursor):
         """Función para eliminar usuarios ya existentes"""
 
         # Mostrar mensaje de confirmación
@@ -210,7 +216,7 @@ class FormUser():
                 "DELETE FROM usuarios WHERE id_usuario = ?", (id_usuario,))
             conecta.commit()
             self.menu_window.destroy()
-            self.show_users()
+            self.show_users(conecta, cursor)
 
     def back(self):
         """Función para volver al panel anterior"""

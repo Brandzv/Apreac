@@ -7,13 +7,15 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 import logic.open_panels
 from utility import util_window as centrar_ventana
-from conexion import cursor, conecta
+from conexion import get_cursor
 
 
 class FormStudent():
     """Clase del CRUD de la tabla alumnos"""
 
     def __init__(self, body):
+        # Obtener el cursor de la base de datos
+        conecta, cursor = get_cursor()
         # Variable para limpiar el panel
         self.refresh = body
         # LabelFrame que contiene el CRUD
@@ -25,11 +27,11 @@ class FormStudent():
         student_frame.pack(fill="x", padx=5, pady=2, ipady=5)
 
         # Llamada a la función del diseño del formulario
-        self.form_students(student_frame)
+        self.form_students(student_frame, conecta, cursor)
         self.table_students(body)
-        self.show_students()
+        self.show_students(conecta, cursor)
 
-    def form_students(self, student_frame):
+    def form_students(self, student_frame, conecta, cursor):
         """Función del diseño del formulario"""
 
         # Ingreso de id
@@ -68,7 +70,7 @@ class FormStudent():
         self.button_back = tk.Button(
             student_frame, text="Regresar", command=self.back, font=("Helvetica", 11))
         self.button_save = tk.Button(
-            student_frame, text="Guardar", command=self.save_form, font=("Helvetica", 11))
+            student_frame, text="Guardar", command=lambda: self.save_form(conecta, cursor), font=("Helvetica", 11))
 
         # Configuración de columnas del LabelFrame
         student_frame.columnconfigure(2, weight=1)
@@ -126,7 +128,7 @@ class FormStudent():
         # Evento doble click en la tabla
         self.tree.bind("<Double-1>", self.on_double_click)
 
-    def show_students(self):
+    def show_students(self, conecta, cursor):
         """Función de mostrar los registros de la tabla alumnos"""
 
         # Limpiar tabla
@@ -143,17 +145,19 @@ class FormStudent():
     def on_double_click(self, event):
         """Función de doble click en la tabla"""
 
+        # Obtener el cursor de la base de datos
+        conecta, cursor = get_cursor()
         # Obtener el item seleccionado
         item = self.tree.selection()[0]
         values = self.tree.item(item, "values")
-        self.menu_student(values)
+        self.menu_student(values, conecta, cursor)
 
-    def menu_student(self, values):
+    def menu_student(self, values, conecta, cursor):
         """Función de diseño del TopLevel para editar y eliminar"""
 
         self.menu_window = tk.Toplevel()
         self.menu_window.title(
-            f"Menú de opciones de {values[1]} {values[2]} {values[3]}")
+            f"Menú de opciones de {values[2]} {values[3]} {values[4]}")
         self.menu_window.resizable(False, False)
 
         # Tamaño de la ventana emergente
@@ -212,9 +216,9 @@ class FormStudent():
 
         # Botones para editar y eliminar
         button_edit = tk.Button(
-            button_frame, text="Guardar", command=self.edit_student, font=("Helvetica", 11))
+            button_frame, text="Guardar", command=lambda: self.edit_student(conecta, cursor), font=("Helvetica", 11))
         button_delete = tk.Button(
-            button_frame, text="Eliminar", command=self.delete_student, font=("Helvetica", 11))
+            button_frame, text="Eliminar", command=lambda: self.delete_student(conecta, cursor), font=("Helvetica", 11))
 
         # Colocar widgets en el grid
         self.label_edit_id.grid(row=0, column=0, padx=5, pady=5, sticky="w")
@@ -245,7 +249,7 @@ class FormStudent():
         button_edit.pack(side="left", padx=10)
         button_delete.pack(side="right", padx=10)
 
-    def save_form(self):
+    def save_form(self, conecta, cursor):
         """Función para obtener y guardar nuevos alumnos"""
 
         # Obtener los valores de los campos de entrada
@@ -262,7 +266,7 @@ class FormStudent():
                 cursor.execute(
                     "INSERT INTO alumnos (idAlumno, nombres, apellidoPaterno, apellidoMaterno, programa, rol) VALUES (?, ?, ?, ?, ?, ?)", (student_id, student_name, father_surname, mother_surname, career, role))
                 conecta.commit()
-                self.show_students()
+                self.show_students(conecta, cursor)
             else:
                 # Si los campos están vacíos, mostrar mensaje de advertencia
                 messagebox.showwarning(
@@ -272,7 +276,7 @@ class FormStudent():
             messagebox.showwarning(
                 "Advertencia", "El campo ID debe ser un valor numérico.")
 
-    def edit_student(self):
+    def edit_student(self, conecta, cursor):
         """Función para editar los alumnos ya existentes"""
 
         new_student_id = self.entry_edit_id.get()
@@ -290,7 +294,7 @@ class FormStudent():
                                 new_mother_surname, new_career, new_role, self.selected_student_id))
                 conecta.commit()
                 self.menu_window.destroy()
-                self.show_students()
+                self.show_students(conecta, cursor)
             else:
                 # Si los campos están vacíos, mostrar mensaje de advertencia
                 messagebox.showwarning(
@@ -300,7 +304,7 @@ class FormStudent():
             messagebox.showwarning(
                 "Advertencia", "El campo ID debe ser un valor numérico.")
 
-    def delete_student(self):
+    def delete_student(self, conecta, cursor):
         """Función para eliminar alumnos ya existentes"""
 
         # Mostrar mensaje de confirmación
@@ -312,7 +316,7 @@ class FormStudent():
                 "DELETE FROM alumnos WHERE id = ?", (self.selected_student_id,))
             conecta.commit()
             self.menu_window.destroy()
-            self.show_students()
+            self.show_students(conecta, cursor)
 
     def back(self):
         """Función para volver al panel anterior"""

@@ -7,7 +7,7 @@ import datetime
 from reportlab.lib.pagesizes import letter, landscape
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Image, PageBreak
 from reportlab.lib.styles import getSampleStyleSheet
-from conexion import cursor
+from conexion import get_cursor
 
 
 class BitacoraPDF:
@@ -15,6 +15,9 @@ class BitacoraPDF:
 
     def generate_bitacora(self, crear_pdf, date):
         """Función para generar el PDF"""
+
+        # Obtener el cursor de la base de datos
+        conecta, cursor = get_cursor()
 
         if crear_pdf:
             # Se nombre el archivo con "BitacoraUso" "Dia/Mes/Año_Horas Minutos Segundos"

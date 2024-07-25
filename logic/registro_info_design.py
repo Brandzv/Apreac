@@ -10,7 +10,7 @@ from tkinter import ttk, messagebox
 import logic.open_panels
 import logic.bitacora_pdf
 from utility import util_window as centrar_ventana
-from conexion import cursor, conecta
+from conexion import get_cursor
 
 
 class InfoDesign():
@@ -23,6 +23,9 @@ class InfoDesign():
         self.new_window = frame
         # Se usara para refrescar la tabla al guardar los registros
         self.refresh = body_table
+
+        # Obtener el cursor de la base de datos
+        conecta, cursor = get_cursor()
 
         # Se selecciona los datos necesarios para mostrar en los input
         cursor.execute(
@@ -38,16 +41,16 @@ class InfoDesign():
             # en las siguientes variables
             self.id_alumno, self.nombre, self.apellido_paterno, self.apellido_materno, self.programa, self.rol = student
             # Se llaman los métodos
-            self.student_info(frame)
+            self.student_info(frame, conecta, cursor)
             self.table_info(body_table)
-            self.show_registers(body_table)
+            self.show_registers(body_table, conecta, cursor)
         else:
             # En caso de que no exista alumno con la ID ingresada se mostrara el siguiente texto
             self.student_not_found = tk.Label(
                 frame, text="Estudiante no encontrado", font=("Helvetica", 13))
             self.student_not_found.pack()
 
-    def student_info(self, frame):
+    def student_info(self, frame, conecta, cursor):
         """Función mostrar información de alumno"""
 
         # Mostrar información de alumno
@@ -94,7 +97,7 @@ class InfoDesign():
             frame, text="Atrás", command=self.recover_id, width=6, font=("Helvetica", 11))
         # Botón para registrar alumno
         self.button_register_student = tk.Button(
-            frame, text="Registrar", command=self.save_register, width=15, font=("Helvetica", 11))
+            frame, text="Registrar", command=lambda: self.save_register(conecta, cursor), width=15, font=("Helvetica", 11))
         # Botón para generar PDF
         self.button_generate_pdf = tk.Button(
             frame, text="Generar PDF", command=self.create_pdf, width=15, font=("Helvetica", 11))
@@ -167,7 +170,7 @@ class InfoDesign():
         # Configura la posición de tree y el como se expande
         self.tree.pack(fill="both", expand=True, pady=1, padx=5)
 
-    def save_register(self):
+    def save_register(self, conecta, cursor):
         """Función guardar registro"""
 
         # Obtener valores de los campos
@@ -336,7 +339,7 @@ class InfoDesign():
             messagebox.showerror(
                 "Error", "Por favor, completa todos los campos")
 
-    def show_registers(self, body_table):
+    def show_registers(self, body_table, conecta, cursor):
         """Función mostrar registros"""
 
         # Borra todas las filas previamente agregadas al widget tree, lo que es útil

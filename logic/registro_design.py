@@ -8,13 +8,15 @@ import datetime
 from tkinter import ttk, messagebox
 import logic.bitacora_pdf
 from logic.registro_info_design import InfoDesign
-from conexion import cursor
+from conexion import get_cursor
 
 
 class RegisterDesign:
     """Clase del diseño del panel escaneo"""
 
     def __init__(self, body):
+        # Obtener el cursor de la base de datos
+        conecta, cursor = get_cursor()
         # El panel body se usara para mostrar frame para buscar alumnos por id la tabla de registros
         body_table = body
         # Este frame se utilizará para buscar alumnos por su IDS
@@ -28,7 +30,7 @@ class RegisterDesign:
         # Llama a los métodos
         self.register_id(frame, body_table)
         self.table_info(body_table)
-        self.show_registers(body_table)
+        self.show_registers(body_table, conecta, cursor)
 
     def register_id(self, frame, body_table):
         """Función que crea el entry de ID"""
@@ -127,7 +129,7 @@ class RegisterDesign:
         # Configura la posición de tree y el como se expande
         self.tree.pack(fill="both", expand=True, pady=1, padx=5)
 
-    def show_registers(self, body_table):
+    def show_registers(self, body_table, conecta, cursor):
         """Función mostrar registros"""
 
         # Borra todas las filas previamente agregadas al widget tree, lo que es útil

@@ -6,20 +6,22 @@ Descripción: Modulo de diseño del panel horario
 import tkinter as tk
 from tkinter import ttk
 from config import BODY_COLOR
-from conexion import cursor
+from conexion import get_cursor
 
 
 class ScheduleDesign():
     """Clase del diseño del panel horario"""
 
     def __init__(self, body):
+        # Obtener el cursor de la base de datos
+        conecta, cursor = get_cursor()
         label_schedule_text = tk.Label(body, text="Horario",
                                        bg=BODY_COLOR, font=("Helvetica", 16))
         label_schedule_text.pack()
 
-        self.table_schedule(body)
+        self.table_schedule(body, conecta, cursor)
 
-    def table_schedule(self, body):
+    def table_schedule(self, body, conecta, cursor):
         """Función para crear la tabla de horario"""
 
         # Configura el widget tree con las columnas y encabezados siguientes

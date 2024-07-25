@@ -7,7 +7,7 @@ import tkinter as tk
 from tkinter import messagebox
 from utility import util_window as centrar_ventana
 from logic.main_design import MainDesign
-from conexion import cursor
+from conexion import get_cursor
 
 
 class Login(tk.Tk):
@@ -15,10 +15,12 @@ class Login(tk.Tk):
 
     def __init__(self):
         super().__init__()
+        # Obtener el cursor de la base de datos
+        conecta, cursor = get_cursor()
         self.config_login()
         self.panel()
         self.top_text()
-        self.data_login()
+        self.data_login(cursor)
 
     def config_login(self):
         """Función que crea y configura la ventana"""
@@ -59,7 +61,7 @@ class Login(tk.Tk):
                              font=("Arial", 30, "bold"))
         self.text.pack(side="bottom", pady=20)
 
-    def data_login(self):
+    def data_login(self, cursor):
         """Función que obtiene los datos del login"""
 
         # Ingreso de usuario
@@ -76,7 +78,7 @@ class Login(tk.Tk):
 
         # Botón para iniciar sesión
         self.button_login = tk.Button(
-            self.body_login, text="Iniciar sesión", command=self.access, font=("Helvetica", 13))
+            self.body_login, text="Iniciar sesión", command=lambda: self.access(cursor), font=("Helvetica", 13))
 
         # Colocar los widgets
         self.label_user.grid(row=0, column=0, padx=5, pady=10, sticky="w")
@@ -88,7 +90,7 @@ class Login(tk.Tk):
 
         self.button_login.grid(row=3, column=0, columnspan=2, padx=10, pady=10)
 
-    def access(self):
+    def access(self, cursor):
         """Función que obtiene los datos del login"""
 
         # Obtener los valores ingresados por el usuario
@@ -116,7 +118,8 @@ class Login(tk.Tk):
                 MainDesign(body, user)
         else:
             # Si las credenciales son incorrectas, mostrar un mensaje de error
-            messagebox.showerror("Error", "Usuario o contraseña incorrectos")
+            messagebox.showerror(
+                "Error", "Usuario o contraseña incorrectos")
             self.entry_user.delete(0, tk.END)
             self.entry_password.delete(0, tk.END)
 
