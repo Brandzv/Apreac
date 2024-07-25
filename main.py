@@ -5,8 +5,17 @@ Descripción: Modulo de ejecución del sistema de acceso
 """
 
 from logic.login_design import Login
+from conexion import inicializar_db
 
 
-root = Login()
+def main():
+    # Inicializa la base de datos
+    inicializar_db()
 
-root.mainloop()
+    # Inicia la ventana de login
+    root = Login()
+    root.mainloop()
+
+
+if __name__ == "__main__":
+    main()
