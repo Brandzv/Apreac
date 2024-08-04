@@ -263,6 +263,13 @@ class FormCourses():
                     "INSERT INTO horarios (crn, docente, diaSemana, horaEntrada, horaSalida) VALUES (?, ?, ?, ?, ?)",
                     (course_crn, course_teacher, DAY_MAPPING[course_day_week], course_entry_time, course_departure_time))
                 conecta.commit()
+
+                self.show_crn.delete(0, tk.END)
+                self.show_teacher.delete(0, tk.END)
+                self.show_course_day_week.delete(0, tk.END)
+                self.show_entry_time.delete(0, tk.END)
+                self.show_departure_time.delete(0, tk.END)
+
                 self.show_schedule(conecta, cursor)
             else:
                 # Si los campos están vacíos, mostrar mensaje de advertencia
