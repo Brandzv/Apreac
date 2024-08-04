@@ -67,7 +67,7 @@ class FormUser():
         self.text_password.grid(row=1, column=0, padx=5, pady=2, sticky="e")
         self.show_password.grid(row=1, column=1, padx=1, pady=2, sticky="w")
         self.button_back.grid(row=2, column=0, padx=2, pady=2, sticky="w")
-        self.button_save.grid(row=2, column=0, columnspan=2, padx=2, pady=2)
+        self.button_save.grid(row=2, column=0, columnspan=2, padx=2, pady=2, ipadx=25)
 
     def table_users(self, body, conecta, cursor):
         """Función de diseño del encabezado del Treeview"""

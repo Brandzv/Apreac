@@ -102,8 +102,9 @@ class FormCourses():
         self.show_departure_time.grid(
             row=3, column=2, padx=5, pady=5, sticky="ew")
 
-        self.button_back.grid(row=4, column=2, padx=5, pady=5, sticky="e")
-        self.button_save.grid(row=4, column=3, padx=5, pady=5, sticky="w")
+        self.button_back.grid(row=4, column=1, padx=5, pady=5, sticky="w")
+        self.button_save.grid(row=4, column=1, columnspan=4,
+                              padx=5, pady=5, ipadx=25)
 
     def table_schedule(self, body):
         """Función de diseño del encabezado del Treeview"""
@@ -243,7 +244,7 @@ class FormCourses():
         self.button_edit_save.grid(
             row=4, column=2, padx=5, pady=5, sticky="e")
         self.button_edit_delete.grid(row=4, column=3,
-                                   padx=5, pady=5, sticky="w")
+                                     padx=5, pady=5, sticky="w")
 
     def save_form(self, conecta, cursor):
         """Función para obtener y guardar nuevos cursos"""

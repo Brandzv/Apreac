@@ -96,8 +96,8 @@ class FormStudent():
         self.text_role.grid(row=3, column=3, padx=5, pady=5, sticky="w")
         self.show_role.grid(row=3, column=4, padx=5, pady=5, sticky="ew")
 
-        self.button_back.grid(row=4, column=2, padx=5, pady=5, sticky="e")
-        self.button_save.grid(row=4, column=3, padx=5, pady=5, sticky="w")
+        self.button_back.grid(row=4, column=1, padx=5, pady=5, sticky="w")
+        self.button_save.grid(row=4, column=1, columnspan=4, padx=5, pady=5, ipadx=25)
 
     def table_students(self, body):
         """Función de diseño del encabezado del Treeview"""
