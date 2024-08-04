@@ -19,7 +19,7 @@ class BitacoraPDF:
         # Obtener el cursor de la base de datos
         conecta, cursor = get_cursor()
 
-        if crear_pdf:
+        if crear_pdf or date:
             # Se nombre el archivo con "BitacoraUso" "Dia/Mes/Año_Horas Minutos Segundos"
             time = datetime.datetime.now()
             date_current_time = time.strftime("%d-%m-%y_%H%M%S")
