@@ -49,7 +49,7 @@ class ReportsDesign():
         # Imprime los widget en el frame
         lbl_date.pack(anchor="center", pady=10)
         self.entry_date.pack(anchor="center")
-        self.button_generate_pdf.pack(anchor="center", pady=5)
+        self.button_generate_pdf.pack(anchor="center", pady=5, ipadx=10)
 
     def pick_date(self, event):
         """Función para obtener la fecha seleccionada"""

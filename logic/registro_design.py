@@ -84,8 +84,8 @@ class RegisterDesign:
         self.entry_id.focus_set()
 
         # Empaqueta los botones en la misma fila y centrados horizontalmente
-        self.button_id.pack(padx=left_padding, pady=5)
-        self.button_generate_pdf.pack(padx=left_padding)
+        self.button_id.pack(padx=left_padding, pady=5, ipadx=10)
+        self.button_generate_pdf.pack(padx=left_padding, ipadx=10)
 
     def open_info_frame(self, frame, search_id, body_table):
         """Función que abre frame de información y cierra el panel de registro."""
