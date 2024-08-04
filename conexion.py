@@ -6,7 +6,7 @@ import sqlite3
 def get_cursor():
     """Función para obtener un cursor de la base de datos"""
 
-    conecta = sqlite3.connect("database/apreac.db")
+    conecta = sqlite3.connect("apreac.db")
     cursor = conecta.cursor()
     return conecta, cursor
 
@@ -70,6 +70,12 @@ def inicializar_db():
             INSERT INTO usuarios (usuario, contraseña)
             SELECT 'admin', '1234'
             WHERE NOT EXISTS (SELECT 1 FROM usuarios WHERE usuario = 'admin')
+        ''')
+        
+        cursor.execute('''
+            INSERT INTO usuarios (usuario, contraseña)
+            SELECT 'CTC', '1234'
+            WHERE NOT EXISTS (SELECT 1 FROM usuarios WHERE usuario = 'CTC')
         ''')
 
         # Guarda los cambios
