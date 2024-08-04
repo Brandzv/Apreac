@@ -61,6 +61,11 @@ class MainDesign():
             ("Horario", " \uf784", self.button_horario, self.open_schedule_panel)
         }
 
+        self.button_exit = tk.Button(self.leftbar)
+        self.menu_button_config(
+            self.button_exit, "Salir", " \uf52b", font_awesome, width_menu, height_menu, self.exit)
+        self.button_exit.pack(side=tk.BOTTOM)
+
         # Configurar cada botón del menú
         for text, icon, button, comando in button_content:
             self.menu_button_config(
@@ -129,6 +134,11 @@ class MainDesign():
         # Mostrar el panel de agregar datos
         show_schedule_main = logic.open_panels.OpenPanel(self.body)
         show_schedule_main.show_add_panel()
+
+    def exit(self):
+        """Función para cerrar la aplicación"""
+
+        self.leftbar.master.destroy()
 
     def clear_panel(self, panel):
         """Función que se encarga de limpiar el contenido del panel"""
