@@ -5,8 +5,6 @@ Descripción: Modulo que crea funciones para poder crear pdf con datos de una fe
 
 import tkinter as tk
 from tkinter import messagebox, END
-from tkcalendar import Calendar
-from utility import util_window as centrar_ventana
 import logic.bitacora_pdf
 
 
@@ -40,7 +38,7 @@ class ReportsDesign():
         # Campo de entrada para que el usuario introduzca a fecha
         self.entry_date = tk.Entry(report_frame, font=("Helvetica", 13))
         # Inserta el texto 'dd/mm/yyyy' en el campo de entrada
-        self.entry_date.insert(0, "dd/mm/yyyy")
+        self.entry_date.insert(0, "dd/mm/yy")
         # Asociar el evento de clic izquierdo del ratón con la función 'pick_date' en 'entry_date'
         self.entry_date.bind("<1>", self.pick_date)
 
@@ -54,43 +52,11 @@ class ReportsDesign():
         self.button_generate_pdf.pack(anchor="center", pady=5)
 
     def pick_date(self, event):
-        """Función para seleccionar la fecha"""
-
-        # Crea una nueva ventana como una ventana de nivel superior
-        self.date_window = tk.Toplevel()
-        # Establecer las dimensiones de la ventana
-        w, h = 300, 260
-        self.date_window.geometry(f"{w}x{h}+0+0")
-        # Centrar la ventana 'date_window' en la pantalla
-        centrar_ventana.centrar_ventana(self.date_window, w, h)
-        self.date_window.resizable(False, False)
-
-        # Hacer que la ventana 'date_window' sea transitoria
-        self.date_window.transient()
-        # Obtener el foco para la ventana
-        self.date_window.focus_get()
-        # Establecer la ventana 'date_window' para que capture todos los eventos
-        self.date_window.grab_set()
-
-        # Crear el widget de calendario
-        self.set_calendar = Calendar(
-            self.date_window, date_pattern="dd/mm/yy", font=("Helvetica", 13))
-
-        button_submit = tk.Button(
-            self.date_window, text="Seleccionar", command=self.get_date, font=("Helvetica", 11))
-
-        self.set_calendar.pack()
-        button_submit.pack(anchor="center", pady=5)
-
-    def get_date(self):
         """Función para obtener la fecha seleccionada"""
 
         # Eliminar el contenido del campo de entrada 'entry_date'
-        self.entry_date.delete(0, END)
-        # Insertar la fecha seleccionada del calendario en el campo de entrada
-        self.entry_date.insert(0, self.set_calendar.get_date())
-        # Destruir la ventana emergente después de seleccionar la fecha
-        self.date_window.destroy()
+        if self.entry_date.get() == "dd/mm/yy":
+            self.entry_date.delete(0, END)
 
     def create_pdf(self):
         """Función para generar el PDF"""
@@ -98,7 +64,7 @@ class ReportsDesign():
         # Obtener la fecha del campo de entrada 'entry_date'
         date = self.entry_date.get()
         # Verificar si la fecha es igual al texto de ejemplo 'dd/mm/yyyy'
-        if date == "dd/mm/yyyy":
+        if date == "dd/mm/yy":
             # Mostrar un mensaje de error si no se ha seleccionado una fecha válida
             messagebox.showerror(
                 "Error", "Por favor, selecciona una fecha válida.")
