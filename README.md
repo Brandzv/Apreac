@@ -1,8 +1,6 @@
 # APREAC
 
-Aplicación de registro de acceso.
-<br>
-Este proyecto está diseñado para optimizar la velocidad y eficiencia del registro de acceso. Permitiendo un proceso de registro rápido y sin complicaciones, mejorando significativamente la experiencia del usuario al acceder.
+Este proyecto está diseñado para mejorar la velocidad y eficiencia del registro de acceso. Permitiendo un proceso de registro rápido y sin complicaciones, mejorando significativamente la experiencia del usuario al acceder.
 
 <details>
 <summary>Contenido</summary>
@@ -15,11 +13,13 @@ Este proyecto está diseñado para optimizar la velocidad y eficiencia del regis
 
 </details>
 
+![Apreac](https://socialify.git.ci/Brandzv/Apreac/image?description=1&descriptionEditable=Aplicaci%C3%B3n%20de%20registro%20de%20acceso&font=Raleway&logo=https%3A%2F%2Fgithub.com%2FBrandzv%2FApreac%2Fblob%2Fmaster%2Fresource%2Flogo.svg&name=1&owner=1&pattern=Charlie%20Brown&theme=Light)
+
 ## Características
 
--   **Registro rápido:** Proceso de acceso optimizado para minimizar el tiempo de registro.
+-   **Registro rápido:** Proceso de acceso optimizado para reducir el tiempo de registro.
 -   **Interfaz eficaz:** Diseño fácil de usar que facilita la navegación.
--   **Reportes:** Generación de informes sobre los registros de acceso.
+-   **Reportes:** Generación de reportes sobre los registros de acceso.
 
 ## Capturas de pantalla
 
