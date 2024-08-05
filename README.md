@@ -21,6 +21,12 @@ Este proyecto está diseñado para optimizar la velocidad y eficiencia del regis
 -   **Interfaz eficaz:** Diseño fácil de usar que facilita la navegación.
 -   **Reportes:** Generación de informes sobre los registros de acceso.
 
+## Capturas de pantalla
+
+![Login Screenshot](https://github.com/Brandzv/Apreac/blob/master/resource/login_mackup.png)
+![MenuPanel Screenshot](https://github.com/Brandzv/Apreac/blob/master/resource/menuPanel_mackup.png)
+![Login Screenshot](https://github.com/Brandzv/Apreac/blob/master/resource/registerPDF_makcup.png)
+
 ## Stack
 
 [![Python][python-badge]][python-url]
