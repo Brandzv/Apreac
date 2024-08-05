@@ -13,7 +13,7 @@ Este proyecto está diseñado para mejorar la velocidad y eficiencia del registr
 
 </details>
 
-![Apreac](https://socialify.git.ci/Brandzv/Apreac/image?description=1&descriptionEditable=Aplicaci%C3%B3n%20de%20registro%20de%20acceso&font=Raleway&logo=https%3A%2F%2Fgithub.com%2FBrandzv%2FApreac%2Fblob%2Fmaster%2Fresource%2Flogo.svg&name=1&owner=1&pattern=Charlie%20Brown&theme=Light)
+![Apreac](https://github.com/Brandzv/Apreac/blob/master/resource/Apreac.png)
 
 ## Características
 
