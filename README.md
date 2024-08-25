@@ -32,6 +32,7 @@ Este proyecto está diseñado para mejorar la velocidad y eficiencia del registr
 [![Python][python-badge]][python-url]
 [![tkinter][tkinter-badge]][tkinter-url]
 [![reportlab][reportlab-badge]][reportlab-url]
+[![SQLite][sqlite-badge]][sqlite-url]
 
 [python-url]: https://www.python.org/
 [python-badge]: https://img.shields.io/badge/Python-3.10.11-blue?style=for-the-badge&logo=python
@@ -39,6 +40,8 @@ Este proyecto está diseñado para mejorar la velocidad y eficiencia del registr
 [tkinter-badge]: https://img.shields.io/badge/tkinter-8.6-brightgreen?style=for-the-badge&logo=python
 [reportlab-url]: https://www.reportlab.com/
 [reportlab-badge]: https://img.shields.io/badge/reportlab-4.2.0-orange?style=for-the-badge
+[sqlite-url]: https://www.sqlite.org/
+[sqlite-badge]: https://img.shields.io/badge/SQLite-3.45.2-blue?style=for-the-badge&logo=sqlite
 
 ## Instalación
 
